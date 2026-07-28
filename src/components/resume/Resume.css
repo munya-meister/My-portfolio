@@ -1,0 +1,263 @@
+/* ===========================
+   RESUME SECTION
+=========================== */
+
+.resume {
+  position: relative;
+  padding: 120px 0;
+  color: #fff;
+  overflow: hidden;
+}
+
+.resume::before {
+  content: "";
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: rgba(255, 193, 7, 0.08);
+  filter: blur(140px);
+  top: -100px;
+  right: -120px;
+}
+
+.resume-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.resume-heading {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 48px;
+}
+
+.resume-heading h2 {
+  font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+  margin: 12px 0 8px;
+}
+
+.resume-subtitle {
+  color: #d0d0d0;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.resume-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr;
+  gap: 28px;
+}
+
+.resume-main,
+.resume-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.resume-intro-card,
+.resume-card {
+  background: rgba(24, 24, 24, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(16px);
+}
+
+.resume-intro-card p {
+  color: #d8d8d8;
+  line-height: 1.8;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 20px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: linear-gradient(180deg, #ffc107, rgba(255, 193, 7, 0.2));
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+  padding-left: 24px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -2px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffc107;
+  box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.16);
+}
+
+.timeline-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #b7b7b7;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.timeline-type {
+  color: #ffc107;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.timeline-content h3 {
+  font-size: 1.08rem;
+  margin-bottom: 6px;
+}
+
+.timeline-content p {
+  color: #c3c3c3;
+  line-height: 1.7;
+  font-size: 0.96rem;
+}
+
+.profile-card-header h3,
+.resume-card h3 {
+  color: #ffc107;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
+
+.profile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #e7e7e7;
+}
+
+.profile-icon {
+  color: #ffc107;
+  margin-top: 2px;
+}
+
+.profile-item p {
+  color: #b9b9b9;
+  margin-top: 3px;
+  font-size: 0.95rem;
+}
+
+.skill-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill-badges span {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #f2f2f2;
+  font-size: 0.9rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stat-pill {
+  padding: 14px 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  text-align: center;
+}
+
+.stat-pill strong {
+  display: block;
+  color: #ffc107;
+  font-size: 1.12rem;
+  margin-bottom: 4px;
+}
+
+.stat-pill span {
+  color: #c8c8c8;
+  font-size: 0.84rem;
+}
+
+.resume-action-card {
+  border-color: rgba(255, 193, 7, 0.35);
+}
+
+.resume-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.view-btn,
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.view-btn {
+  background: linear-gradient(135deg, #ffc107, #ffdb58);
+  color: #111;
+}
+
+.download-btn {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.view-btn:hover,
+.download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(255, 193, 7, 0.16);
+}
+
+@media (max-width: 980px) {
+  .resume-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .resume {
+    padding: 90px 0;
+  }
+
+  .timeline-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
