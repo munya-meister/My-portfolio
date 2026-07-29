@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/navbar/navbar";
+import Navbar from "./components/Navbar/Navbar";
 import Hero from "./components/hero/Hero";
 import About from "./components/about/about";
-import Skills from "./components/skills/skills";
+import Skills from "./components/Skills/Skills";
 import Projects from "./components/projects/projects";
 import Achievements from "./components/achievements/achievements";
 import Contact from "./components/contact/Contact";
