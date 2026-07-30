@@ -20,14 +20,14 @@ const contactMethods = [
   {
     icon: <FaPhoneAlt />,
     label: "Phone",
-    value: "+27 82 123 4567",
-    href: "tel:+27821234567",
+    value: "+263 776 717 471",
+    href: "tel:+263 719 692 697",
   },
   {
     icon: <FaMapMarkerAlt />,
     label: "Location",
     value: "Johannesburg, South Africa",
-    href: "https://maps.google.com/?q=Johannesburg+South+Africa",
+    href: "https://maps.google.com/?q=Harare+Zimbabwe",
   },
 ];
 
@@ -52,7 +52,8 @@ const socialLinks = [
 function Contact() {
   const handleSubmit = (event) => {
     event.preventDefault();
-    window.location.href = "mailto:munyaradzi@example.com?subject=Portfolio%20Inquiry";
+    window.location.href =
+      "mailto:munyaradzi@example.com?subject=Portfolio%20Inquiry";
   };
 
   return (
@@ -81,9 +82,9 @@ function Contact() {
           <p>LET'S CONNECT</p>
           <h2>Let’s build a brand that feels unforgettable.</h2>
           <p className="contact-intro">
-            Whether you need a polished website, a high-performing campaign, or a
-            creative collaboration, I’m ready to turn your vision into something
-            exceptional.
+            Whether you need a polished website, a high-performing campaign, or
+            a creative collaboration, I’m ready to turn your vision into
+            something exceptional.
           </p>
         </motion.div>
 
@@ -97,7 +98,8 @@ function Contact() {
           >
             <h3>Start a conversation</h3>
             <p>
-              Available for freelance projects, consulting, and creative partnerships.
+              Available for freelance projects, consulting, and creative
+              partnerships.
             </p>
 
             <div className="contact-list">
@@ -153,7 +155,10 @@ function Contact() {
             <div className="form-row">
               <label>
                 Project Type
-                <input type="text" placeholder="Website, campaign, music project" />
+                <input
+                  type="text"
+                  placeholder="Website, campaign, music project"
+                />
               </label>
             </div>
 
@@ -170,7 +175,12 @@ function Contact() {
 
             <div className="social-links">
               {socialLinks.map((link) => (
-                <a key={link.label} href={link.href} target="_blank" rel="noreferrer">
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {link.icon}
                 </a>
               ))}
