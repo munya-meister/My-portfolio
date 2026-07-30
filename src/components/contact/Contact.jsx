@@ -14,8 +14,8 @@ const contactMethods = [
   {
     icon: <FaEnvelope />,
     label: "Email",
-    value: "munyaradzi@example.com",
-    href: "mailto:munyaradzi@example.com",
+    value: "munyaradzi.mbewe01@gmail.com",
+    href: "mailto:munyaradzi.mbewe01@gmail.com",
   },
   {
     icon: <FaPhoneAlt />,
@@ -53,7 +53,7 @@ function Contact() {
   const handleSubmit = (event) => {
     event.preventDefault();
     window.location.href =
-      "mailto:munyaradzi@example.com?subject=Portfolio%20Inquiry";
+      "mailto:munyaradzi.mbewe01@gmail.com?subject=Portfolio%20Inquiry";
   };
 
   return (

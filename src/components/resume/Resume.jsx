@@ -59,10 +59,22 @@ const stats = [
 
 const profileDetails = [
   { icon: <FaMapMarkerAlt />, label: "Location", value: "Harare, Zimbabwe" },
-  { icon: <FaEnvelope />, label: "Email", value: "munya.munaj@gmail.com" },
+  {
+    icon: <FaEnvelope />,
+    label: "Email",
+    value: "munyaradzi.mbewe01@gmail.com",
+  },
   { icon: <FaLanguage />, label: "Languages", value: "English, Shona" },
-  { icon: <FaGraduationCap />, label: "Education", value: "Digital Marketing/ Creative Tech" },
-  { icon: <FaCalendarAlt />, label: "Availability", value: "Open for projects & collaborations" },
+  {
+    icon: <FaGraduationCap />,
+    label: "Education",
+    value: "Digital Marketing/ Creative Tech",
+  },
+  {
+    icon: <FaCalendarAlt />,
+    label: "Availability",
+    value: "Open for projects & collaborations",
+  },
 ];
 
 function Resume() {
