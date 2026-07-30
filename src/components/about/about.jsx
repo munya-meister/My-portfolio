@@ -11,7 +11,7 @@ const defaultAbout = {
   bio1: "I'm Munyaradzi Mbewe, a Digital Marketer, Web Developer and Music Writer who enjoys combining creativity with technology to help businesses and creators grow online.",
   bio2: "From designing modern websites to creating high-converting marketing campaigns and writing music, I enjoy turning ideas into memorable digital experiences that leave a lasting impression.",
   cvUrl: "/cv.pdf",
-  socials: {}
+  socials: {},
 };
 
 function About() {
@@ -19,14 +19,16 @@ function About() {
 
   useEffect(() => {
     let active = true;
-    fetchAbout()
-      .then((data) => {
-        if (!active) return;
-        setAbout((prev) => ({ ...prev, ...data }));
-      })
-      .catch(() => {
-        // keep defaults
-      });
+    fetchAbout().then((data) => {
+      console.log("ABOUT DATA:", data);
+
+      if (!active) return;
+
+      setAbout((prev) => ({
+        ...prev,
+        ...data,
+      }));
+    });
     return () => {
       active = false;
     };
@@ -39,7 +41,10 @@ function About() {
     : profilePic;
 
   return (
-    <section className="about" id="about" style={{
+    <section
+      className="about"
+      id="about"
+      style={{
         backgroundImage: `
           linear-gradient(rgba(8, 8, 8, 0.88), rgba(8, 8, 8, 0.92)),
           url(${aboutBg})
@@ -62,39 +67,31 @@ function About() {
 
           {/* RIGHT SIDE */}
           <div className="about-content">
+            <p className="section-tag">ABOUT ME</p>
 
-          <p className="section-tag">ABOUT ME</p>
+            <h2>{about.heading}</h2>
 
-          <h2>
-            {about.heading}
-          </h2>
+            <p className="about-text">{about.bio1}</p>
 
-          <p className="about-text">
-            {about.bio1}
-          </p>
+            <p className="about-text">{about.bio2}</p>
 
-          <p className="about-text">
-            {about.bio2}
-          </p>
+            {/* BUTTONS */}
 
+            <div className="about-buttons">
+              <a
+                className="primary-btn"
+                href={about.cvUrl}
+                download="Munyaradzi-Mbewe-CV.pdf"
+              >
+                <FaDownload />
+                Download CV
+              </a>
 
-
-          {/* BUTTONS */}
-
-          <div className="about-buttons">
-
-            <a className="primary-btn" href={about.cvUrl} download="Munyaradzi-Mbewe-CV.pdf">
-              <FaDownload />
-              Download CV
-            </a>
-
-            <a className="secondary-btn" href="#contact">
-              Let's Talk
-              <FaArrowRight />
-            </a>
-
-          </div>
-
+              <a className="secondary-btn" href="#contact">
+                Let's Talk
+                <FaArrowRight />
+              </a>
+            </div>
           </div>
         </div>
       </div>
