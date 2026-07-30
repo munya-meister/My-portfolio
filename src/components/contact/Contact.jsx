@@ -26,7 +26,7 @@ const contactMethods = [
   {
     icon: <FaMapMarkerAlt />,
     label: "Location",
-    value: "Johannesburg, South Africa",
+    value: "Harare, Zimbabwe",
     href: "https://maps.google.com/?q=Harare+Zimbabwe",
   },
 ];

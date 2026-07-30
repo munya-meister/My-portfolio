@@ -129,7 +129,7 @@ function Skills() {
 
           <SkillBar icon={<FaCss3Alt />} name="CSS3" level={92} className="css"/>
 
-          <SkillBar icon={<FaJsSquare />} name="JavaScript" level={70} className="js"/>
+          <SkillBar icon={<FaJsSquare />} name="JavaScript" level={60} className="js"/>
 
           <SkillBar icon={<FaReact />} name="React" level={60} className="react"/>
 
@@ -195,7 +195,7 @@ function Skills() {
 
           <SkillBar icon={<FaMicrophone />} name="Music Production" level={95} className="music"/>
 
-          <SkillBar icon={<FaPaintBrush />} name="Adobe Photoshop" level={90} className="photoshop"/>
+          <SkillBar icon={<FaPaintBrush />} name="Adobe Photoshop" level={60} className="photoshop"/>
 
           <SkillBar icon={<FaMicrophone />} name="Premiere Pro" level={88} className="premiere"/>
 
