@@ -5,7 +5,8 @@ const BASE_URL =
 console.log("BASE_URL =", BASE_URL);
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
-
+console.log("BASE_URL =", BASE_URL);
+console.log("ADMIN_PASSWORD =", ADMIN_PASSWORD);
 async function request(path, options = {}) {
   try {
     const response = await fetch(`${BASE_URL}${path}`, options);

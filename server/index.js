@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
 
 dotenv.config();
-
+console.log("ADMIN_PASSWORD =", process.env.ADMIN_PASSWORD);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
