@@ -19,7 +19,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
 
-  // Your Vercel domain
+  
   "https://your-vercel-project.vercel.app",
 
   // Preview deployments
@@ -27,28 +27,8 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin(origin, callback) {
-
-    // Allow Postman and curl
-    if (!origin) return callback(null, true);
-
-    const allowed = allowedOrigins.some(item => {
-
-      if (typeof item === "string") {
-        return item === origin;
-      }
-
-      return item.test(origin);
-    });
-
-    if (allowed) {
-      return callback(null, true);
-    }
-
-    callback(new Error("Not allowed by CORS"));
-  },
-
-  credentials: true
+  origin: process.env.CLIENT_URL?.split(","),
+  credentials: true,
 }));
 
 app.use(express.json({ limit: "20mb" }));
