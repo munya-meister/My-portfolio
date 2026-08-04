@@ -209,7 +209,7 @@ app.post("/api/contact", async (req, res) => {
   if (!transporter) {
     return res.status(500).json({
       success: false,
-      message: "Unable to send message.",
+      message: "Email delivery is not configured yet. Set EMAIL_USER and EMAIL_PASS in the environment.",
     });
   }
 
