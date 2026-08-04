@@ -1,16 +1,10 @@
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "http://localhost:4000";
-
-console.log("BASE_URL =", BASE_URL);
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
-console.log("BASE_URL =", BASE_URL);
-console.log("ADMIN_PASSWORD =", ADMIN_PASSWORD);
+
 async function request(path, options = {}) {
   try {
     const response = await fetch(`${BASE_URL}${path}`, options);
-
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
@@ -22,6 +16,16 @@ async function request(path, options = {}) {
     console.error("API Error:", err);
     throw err;
   }
+}
+
+export function sendContactMessage(payload) {
+  return request("/api/contact", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
 }
 
 export function fetchAbout() {

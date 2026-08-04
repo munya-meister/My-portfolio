@@ -1,37 +1,52 @@
 import "./Resume.css";
+import { useState } from "react";
 import resumeBg from "../../assets/heroe.png";
 import { motion } from "framer-motion";
-import { FaDownload, FaEye, FaMapMarkerAlt, FaEnvelope, FaLanguage, FaGraduationCap, FaCalendarAlt } from "react-icons/fa";
+import {
+  FaDownload,
+  FaEye,
+  FaMapMarkerAlt,
+  FaEnvelope,
+  FaLanguage,
+  FaGraduationCap,
+  FaCalendarAlt,
+} from "react-icons/fa";
+import { downloadPublicFile } from "../../utils/downloadFile";
 
 const timelineItems = [
   {
     title: "Digital Marketing Specialist",
     period: "2026 — Present",
-    detail: "Leading brand strategy, paid media campaigns, SEO, and conversion-focused growth initiatives.",
+    detail:
+      "Leading brand strategy, paid media campaigns, SEO, and conversion-focused growth initiatives.",
     type: "Experience",
   },
   {
     title: "Freelance Web Developer",
     period: "2026 — Present",
-    detail: "Crafting responsive websites and immersive web experiences using React, Vite, and modern UI systems.",
+    detail:
+      "Crafting responsive websites and immersive web experiences using React, Vite, and modern UI systems.",
     type: "Experience",
   },
   {
     title: "Creative Media & Branding",
     period: "2026 — Present",
-    detail: "Developing visual identities, content strategy, and multimedia production for modern brands.",
+    detail:
+      "Developing visual identities, content strategy, and multimedia production for modern brands.",
     type: "Experience",
   },
   {
     title: "Digital Marketing",
     period: "2026 — 2027",
-    detail: "Built a strong foundation in communication, technology, creativity, and strategic thinking.",
+    detail:
+      "Built a strong foundation in communication, technology, creativity, and strategic thinking.",
     type: "Education",
   },
   {
     title: "Professional Certifications",
     period: "2026 — 2027",
-    detail: "Expanded my expertise through Google, Coursera, UXcel, and Meta learning pathways.",
+    detail:
+      "Expanded my expertise through Google, Coursera, UXcel, and Meta learning pathways.",
     type: "Certifications",
   },
 ];
@@ -78,6 +93,25 @@ const profileDetails = [
 ];
 
 function Resume() {
+  const [downloadMessage, setDownloadMessage] = useState("");
+
+  const handleDownloadResume = async () => {
+    setDownloadMessage("");
+
+    const success = await downloadPublicFile(
+      "/resume/Munyaradzi_Mbewe__Resume.pdf",
+      "Munyaradzi_Mbewe_Resume.pdf",
+    );
+
+    if (success) {
+      setDownloadMessage("Download started.");
+    } else {
+      setDownloadMessage(
+        "The resume could not be downloaded right now. Please try again shortly.",
+      );
+    }
+  };
+
   return (
     <section
       className="resume"
@@ -116,10 +150,11 @@ function Resume() {
               transition={{ duration: 0.8 }}
             >
               <p>
-                I’m a multidisciplinary digital professional with experience across
-                Digital Marketing, Web Development, Branding, and Creative Media.
-                I combine strategy, design, and technology to build thoughtful,
-                high-impact digital experiences for brands and creators.
+                I’m a multidisciplinary digital professional with experience
+                across Digital Marketing, Web Development, Branding, and
+                Creative Media. I combine strategy, design, and technology to
+                build thoughtful, high-impact digital experiences for brands and
+                creators.
               </p>
             </motion.div>
 
@@ -220,15 +255,33 @@ function Resume() {
             >
               <h3>Professional Resume</h3>
               <div className="resume-actions">
-                <a className="view-btn" href="/resume/resume.pdf" target="_blank" rel="noreferrer">
+                <a
+                  className="view-btn"
+                  href="/resume/Munyaradzi_Mbewe__Resume.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <FaEye />
                   View Resume
                 </a>
-                <a className="download-btn" href="/resume/resume.pdf" download="Munyaradzi-Mbewe-Resume.pdf">
+                <button
+                  type="button"
+                  className="download-btn"
+                  onClick={handleDownloadResume}
+                >
                   <FaDownload />
                   Download Resume
-                </a>
+                </button>
               </div>
+              {downloadMessage ? (
+                <p
+                  className="download-feedback"
+                  role="status"
+                  aria-live="polite"
+                >
+                  {downloadMessage}
+                </p>
+              ) : null}
             </motion.div>
           </div>
         </div>

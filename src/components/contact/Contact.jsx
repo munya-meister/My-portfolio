@@ -1,4 +1,5 @@
 import "./Contact.css";
+import { useState } from "react";
 import contactBg from "../../assets/heroe.png";
 import { motion } from "framer-motion";
 import {
@@ -8,20 +9,32 @@ import {
   FaGithub,
   FaLinkedin,
   FaInstagram,
+  FaPaperPlane,
+  FaSpinner,
+  FaCheckCircle,
+  FaTimesCircle,
 } from "react-icons/fa";
+import { sendContactMessage } from "../../api";
+
+const initialForm = {
+  name: "",
+  email: "",
+  subject: "",
+  message: "",
+};
 
 const contactMethods = [
   {
     icon: <FaEnvelope />,
     label: "Email",
     value: "munyaradzi.mbewe01@gmail.com",
-    href: "mailto:munyaradzi.mbewe01@gmail.com",
+    href: "https://mail.google.com/mail/?view=cm&to=munyaradzi.mbewe01@gmail.com",
   },
   {
     icon: <FaPhoneAlt />,
     label: "Phone",
     value: "+263 776 717 471",
-    href: "tel:+263 719 692 697",
+    href: "tel:+263719692697",
   },
   {
     icon: <FaMapMarkerAlt />,
@@ -50,10 +63,81 @@ const socialLinks = [
 ];
 
 function Contact() {
-  const handleSubmit = (event) => {
+  const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState({ type: "", message: "" });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setForm((current) => ({ ...current, [name]: value }));
+    setErrors((current) => ({ ...current, [name]: "" }));
+
+    if (feedback.message) {
+      setFeedback({ type: "", message: "" });
+    }
+  };
+
+  const validateForm = () => {
+    const nextErrors = {};
+
+    if (!form.name.trim()) {
+      nextErrors.name = "Please enter your name.";
+    }
+
+    if (!form.email.trim()) {
+      nextErrors.email = "Please enter your email address.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      nextErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!form.subject.trim()) {
+      nextErrors.subject = "Please enter a subject.";
+    }
+
+    if (!form.message.trim()) {
+      nextErrors.message = "Please enter your message.";
+    }
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    window.location.href =
-      "mailto:munyaradzi.mbewe01@gmail.com?subject=Portfolio%20Inquiry";
+
+    if (!validateForm()) {
+      setFeedback({
+        type: "error",
+        message: "Please fix the highlighted fields before sending.",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setFeedback({ type: "", message: "" });
+
+    try {
+      const result = await sendContactMessage(form);
+
+      if (result?.success) {
+        setFeedback({
+          type: "success",
+          message: result.message || "Message sent successfully.",
+        });
+        setForm(initialForm);
+      } else {
+        throw new Error(result?.message || "Unable to send message.");
+      }
+    } catch (error) {
+      setFeedback({
+        type: "error",
+        message: error.message || "Unable to send message.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -121,8 +205,13 @@ function Contact() {
             </div>
 
             <div className="contact-actions">
-              <a className="primary-btn" href="mailto:munyaradzi@example.com">
-                Mail Me
+              <a
+                className="primary-btn"
+                href="https://mail.google.com/mail/?view=cm&to=munyaradzi.mbewe01@gmail.com"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Write Me
               </a>
               <a className="secondary-btn" href="#projects">
                 Explore Projects
@@ -139,38 +228,112 @@ function Contact() {
             onSubmit={handleSubmit}
           >
             <div className="form-row">
-              <label>
+              <label htmlFor="name">
                 Name
-                <input type="text" placeholder="Your name" />
-              </label>
-            </div>
-
-            <div className="form-row">
-              <label>
-                Email
-                <input type="email" placeholder="you@example.com" />
-              </label>
-            </div>
-
-            <div className="form-row">
-              <label>
-                Project Type
                 <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Your name"
+                  value={form.name}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(errors.name)}
+                  disabled={isSubmitting}
+                />
+                {errors.name ? (
+                  <span className="error-text">{errors.name}</span>
+                ) : null}
+              </label>
+            </div>
+
+            <div className="form-row">
+              <label htmlFor="email">
+                Email
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(errors.email)}
+                  disabled={isSubmitting}
+                />
+                {errors.email ? (
+                  <span className="error-text">{errors.email}</span>
+                ) : null}
+              </label>
+            </div>
+
+            <div className="form-row">
+              <label htmlFor="subject">
+                Subject
+                <input
+                  id="subject"
+                  name="subject"
                   type="text"
                   placeholder="Website, campaign, music project"
+                  value={form.subject}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(errors.subject)}
+                  disabled={isSubmitting}
                 />
+                {errors.subject ? (
+                  <span className="error-text">{errors.subject}</span>
+                ) : null}
               </label>
             </div>
 
             <div className="form-row">
-              <label>
+              <label htmlFor="message">
                 Message
-                <textarea rows="5" placeholder="Tell me about your idea..." />
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="5"
+                  placeholder="Tell me about your idea..."
+                  value={form.message}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(errors.message)}
+                  disabled={isSubmitting}
+                />
+                {errors.message ? (
+                  <span className="error-text">{errors.message}</span>
+                ) : null}
               </label>
             </div>
 
-            <button type="submit" className="primary-btn full-width">
-              Send Message
+            {feedback.message ? (
+              <div
+                className={`form-status ${feedback.type}`}
+                role="status"
+                aria-live="polite"
+              >
+                {feedback.type === "success" ? (
+                  <FaCheckCircle />
+                ) : (
+                  <FaTimesCircle />
+                )}
+                <span>{feedback.message}</span>
+              </div>
+            ) : null}
+
+            <button
+              type="submit"
+              className="primary-btn full-width"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <FaSpinner className="spinner" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <FaPaperPlane />
+                  Send Message
+                </>
+              )}
             </button>
 
             <div className="social-links">

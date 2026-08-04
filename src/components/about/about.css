@@ -252,6 +252,12 @@
     padding:16px 34px;
 }
 
+.download-feedback {
+    margin-top: 12px;
+    color: #ffd166;
+    font-size: 0.95rem;
+}
+
 /* Yellow Button */
 
 .primary-btn{
@@ -259,9 +265,27 @@
     background:#ffc107;
 
     color:#000;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 12px 28px rgba(255,193,7,.16);
 }
 
-.primary-btn:hover{
+.primary-btn::before {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,.22), transparent);
+    transform:translateX(-120%);
+    transition:transform .6s ease;
+}
+
+.primary-btn:hover::before,
+.primary-btn:focus-visible::before{
+    transform:translateX(120%);
+}
+
+.primary-btn:hover,
+.primary-btn:focus-visible{
 
     transform:translateY(-4px);
 
@@ -278,7 +302,8 @@
     color:white;
 }
 
-.secondary-btn:hover{
+.secondary-btn:hover,
+.secondary-btn:focus-visible{
 
     background:#3c3c3c;
 

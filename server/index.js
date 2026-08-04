@@ -6,19 +6,35 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
+import nodemailer from "nodemailer";
 
-dotenv.config();
-console.log("ADMIN_PASSWORD =", process.env.ADMIN_PASSWORD);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(__dirname, "../.env.development") });
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-const allowedOrigins = (process.env.CLIENT_URL || "")
-  .split(",")
-  .map(origin => origin.trim())
-  .filter(Boolean);
+const defaultAllowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:5174",
+  "http://127.0.0.1:5174",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+];
+
+const allowedOrigins = [
+  ...new Set([
+    ...defaultAllowedOrigins,
+    ...(process.env.CLIENT_URL || "")
+      .split(",")
+      .map(origin => origin.trim())
+      .filter(Boolean),
+  ]),
+];
 
 app.use(
   cors({
@@ -153,6 +169,70 @@ app.get("/health", (req, res) => {
         time: new Date(),
         version: "1.0"
     });
+});
+
+const emailUser = process.env.EMAIL_USER;
+const emailPass = process.env.EMAIL_PASS;
+const contactRecipient = process.env.CONTACT_EMAIL || "munyaradzi.mbewe01@gmail.com";
+
+const transporter = emailUser && emailPass
+  ? nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: emailUser,
+        pass: emailPass,
+      },
+    })
+  : null;
+
+app.post("/api/contact", async (req, res) => {
+  const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
+  const email = typeof req.body?.email === "string" ? req.body.email.trim() : "";
+  const subject = typeof req.body?.subject === "string" ? req.body.subject.trim() : "";
+  const message = typeof req.body?.message === "string" ? req.body.message.trim() : "";
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!name || !email || !subject || !message) {
+    return res.status(400).json({
+      success: false,
+      message: "Please fill in all required fields correctly.",
+    });
+  }
+
+  if (!emailPattern.test(email)) {
+    return res.status(400).json({
+      success: false,
+      message: "Please enter a valid email address.",
+    });
+  }
+
+  if (!transporter) {
+    return res.status(500).json({
+      success: false,
+      message: "Unable to send message.",
+    });
+  }
+
+  try {
+    await transporter.sendMail({
+      from: `Portfolio Contact <${emailUser}>`,
+      to: contactRecipient,
+      replyTo: email,
+      subject: `Portfolio Contact: ${subject}`,
+      text: `New Portfolio Contact\n\nName:\n${name}\n\nEmail:\n${email}\n\nSubject:\n${subject}\n\nMessage:\n${message}`,
+    });
+
+    return res.json({
+      success: true,
+      message: "Message sent successfully.",
+    });
+  } catch (error) {
+    console.error("Contact email error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Unable to send message.",
+    });
+  }
 });
 
 app.get("/api/about", (req, res) => {
