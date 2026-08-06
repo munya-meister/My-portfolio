@@ -1,10 +1,21 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+const DEFAULT_BASE_URL = "";
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || DEFAULT_BASE_URL).replace(/\/$/, "");
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 
+function buildUrl(path) {
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+
+  return `${BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
 async function request(path, options = {}) {
+  const url = buildUrl(path);
+
   try {
-    const response = await fetch(`${BASE_URL}${path}`, options);
+    const response = await fetch(url, options);
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {

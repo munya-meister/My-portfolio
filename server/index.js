@@ -102,6 +102,27 @@ function saveDB(data) {
     fs.writeFileSync(dbFile, JSON.stringify(data, null, 2));
 }
 
+function saveContactMessage(payload) {
+    const fallbackFile = path.join(dataDir, "contact-messages.json");
+    let messages = [];
+
+    if (fs.existsSync(fallbackFile)) {
+        try {
+            messages = JSON.parse(fs.readFileSync(fallbackFile, "utf8"));
+        } catch {
+            messages = [];
+        }
+    }
+
+    messages.unshift({
+        ...payload,
+        receivedAt: new Date().toISOString(),
+        status: "queued",
+    });
+
+    fs.writeFileSync(fallbackFile, JSON.stringify(messages, null, 2));
+}
+
 const storage = multer.diskStorage({
     destination(req, file, cb) {
         if (req.path.startsWith("/api/about")) {
@@ -207,9 +228,12 @@ app.post("/api/contact", async (req, res) => {
   }
 
   if (!transporter) {
-    return res.status(500).json({
-      success: false,
-      message: "Email delivery is not configured yet. Set EMAIL_USER and EMAIL_PASS in the environment.",
+    saveContactMessage({ name, email, subject, message, source: "smtp-unavailable" });
+
+    return res.json({
+      success: true,
+      message: "Your message was received and saved securely. Mail delivery will be enabled once the email service is configured.",
+      fallback: true,
     });
   }
 
@@ -228,9 +252,12 @@ app.post("/api/contact", async (req, res) => {
     });
   } catch (error) {
     console.error("Contact email error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Unable to send message.",
+    saveContactMessage({ name, email, subject, message, source: "smtp-failed", error: error.message });
+
+    return res.json({
+      success: true,
+      message: "Your message was received and saved securely. We will follow up once the mail service is available.",
+      fallback: true,
     });
   }
 });

@@ -67,6 +67,23 @@ function Contact() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState({ type: "", message: "" });
+  const [mailtoUrl, setMailtoUrl] = useState("");
+
+  const buildMailtoLink = ({ name, email, subject, message }) => {
+    const mailtoAddress = contactMethods[0].value;
+    const mailSubject = encodeURIComponent(subject || "Portfolio Contact");
+    const mailBody = encodeURIComponent(
+      `Name: ${name}
+Email: ${email}
+
+Subject: ${subject}
+
+Message:
+${message}`
+    );
+
+    return `mailto:${mailtoAddress}?subject=${mailSubject}&body=${mailBody}`;
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -117,23 +134,38 @@ function Contact() {
 
     setIsSubmitting(true);
     setFeedback({ type: "", message: "" });
+    setMailtoUrl("");
 
     try {
       const result = await sendContactMessage(form);
 
       if (result?.success) {
-        setFeedback({
-          type: "success",
-          message: result.message || "Message sent successfully.",
-        });
-        setForm(initialForm);
+        if (result.fallback) {
+          const fallbackLink = buildMailtoLink(form);
+          setMailtoUrl(fallbackLink);
+          setFeedback({
+            type: "error",
+            message:
+              "The message was received, but the mail service is not currently available. Use the button below to send it directly via your email client.",
+          });
+        } else {
+          setFeedback({
+            type: "success",
+            message: result.message || "Message sent successfully.",
+          });
+          setForm(initialForm);
+        }
       } else {
         throw new Error(result?.message || "Unable to send message.");
       }
     } catch (error) {
+      const fallbackLink = buildMailtoLink(form);
+      setMailtoUrl(fallbackLink);
       setFeedback({
         type: "error",
-        message: error.message || "Unable to send message.",
+        message:
+          error.message ||
+          "Could not reach the contact server. Use the button below to send your message directly via email.",
       });
     } finally {
       setIsSubmitting(false);
@@ -316,6 +348,17 @@ function Contact() {
                 )}
                 <span>{feedback.message}</span>
               </div>
+            ) : null}
+
+            {mailtoUrl ? (
+              <a
+                className="secondary-btn full-width"
+                href={mailtoUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Send via email client
+              </a>
             ) : null}
 
             <button
