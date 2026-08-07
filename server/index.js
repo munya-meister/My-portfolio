@@ -6,7 +6,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -192,26 +192,23 @@ app.get("/health", (req, res) => {
     });
 });
 
-const emailUser = process.env.EMAIL_USER;
-const emailPass = process.env.EMAIL_PASS;
-const contactRecipient = process.env.CONTACT_EMAIL || "munyaradzi.mbewe01@gmail.com";
-
-const transporter = emailUser && emailPass
-  ? nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: emailUser,
-        pass: emailPass,
-      },
-    })
-  : null;
+const contactRecipient =
+  process.env.CONTACT_EMAIL || "munyaradzi.mbewe01@gmail.com";
 
 app.post("/api/contact", async (req, res) => {
-  const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
-  const email = typeof req.body?.email === "string" ? req.body.email.trim() : "";
-  const subject = typeof req.body?.subject === "string" ? req.body.subject.trim() : "";
-  const message = typeof req.body?.message === "string" ? req.body.message.trim() : "";
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const name =
+    typeof req.body?.name === "string" ? req.body.name.trim() : "";
+
+  const email =
+    typeof req.body?.email === "string" ? req.body.email.trim() : "";
+
+  const subject =
+    typeof req.body?.subject === "string" ? req.body.subject.trim() : "";
+
+  const message =
+    typeof req.body?.message === "string" ? req.body.message.trim() : "";
+
+ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!name || !email || !subject || !message) {
     return res.status(400).json({
@@ -226,38 +223,48 @@ app.post("/api/contact", async (req, res) => {
       message: "Please enter a valid email address.",
     });
   }
+try {
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
-  if (!transporter) {
-    saveContactMessage({ name, email, subject, message, source: "smtp-unavailable" });
+  await resend.emails.send({
+    from: "Portfolio Contact <onboarding@resend.dev>",
+    to: [contactRecipient],
+    replyTo: email,
+    subject: `Portfolio Contact: ${subject}`,
+    text: `
+Name: ${name}
 
-    return res.json({
-      success: true,
-      message: "Your message was received and saved securely. Mail delivery will be enabled once the email service is configured.",
-      fallback: true,
-    });
-  }
+Email: ${email}
 
-  try {
-    await transporter.sendMail({
-      from: `Portfolio Contact <${emailUser}>`,
-      to: contactRecipient,
-      replyTo: email,
-      subject: `Portfolio Contact: ${subject}`,
-      text: `New Portfolio Contact\n\nName:\n${name}\n\nEmail:\n${email}\n\nSubject:\n${subject}\n\nMessage:\n${message}`,
-    });
+Subject: ${subject}
 
-    return res.json({
-      success: true,
-      message: "Message sent successfully.",
-    });
-  } catch (error) {
+Message:
+${message}
+    `,
+  });
+
+  return res.json({
+    success: true,
+    message: "Message sent successfully.",
+  });
+} 
+  catch (error) {
     console.error("Contact email error:", error);
-    saveContactMessage({ name, email, subject, message, source: "smtp-failed", error: error.message });
+
+    saveContactMessage({
+      name,
+      email,
+      subject,
+      message,
+      source: "resend-failed",
+      error: error.message,
+    });
 
     return res.json({
       success: true,
-      message: "Your message was received and saved securely. We will follow up once the mail service is available.",
       fallback: true,
+      message:
+        "Your message was received and saved securely even though email delivery failed.",
     });
   }
 });
