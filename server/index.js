@@ -193,7 +193,7 @@ app.get("/health", (req, res) => {
 });
 
 const contactRecipient =
-  process.env.CONTACT_EMAIL || "munyaradzi.mbewe01@gmail.com";
+  process.env.CONTACT_EMAIL || "munya.munaj@gmail.com";
 
 app.post("/api/contact", async (req, res) => {
   const name =
