@@ -77,7 +77,7 @@ const profileDetails = [
   {
     icon: <FaEnvelope />,
     label: "Email",
-    value: "munyaradzi.mbewe01@gmail.com",
+    value: "munya.munaj@gmail.com",
   },
   { icon: <FaLanguage />, label: "Languages", value: "English, Shona" },
   {

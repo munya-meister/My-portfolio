@@ -27,8 +27,8 @@ const contactMethods = [
   {
     icon: <FaEnvelope />,
     label: "Email",
-    value: "munyaradzi.mbewe01@gmail.com",
-    href: "https://mail.google.com/mail/?view=cm&to=munyaradzi.mbewe01@gmail.com",
+    value: "munya.munaj@gmail.com",
+    href: "https://mail.google.com/mail/?view=cm&to=munya.munaj@gmail.com",
   },
   {
     icon: <FaPhoneAlt />,
@@ -53,7 +53,7 @@ const socialLinks = [
   {
     icon: <FaLinkedin />,
     label: "LinkedIn",
-    href: "https://linkedin.com",
+    href: "https://www.linkedin.com/in/munyaradzi-mbewe-digital-marketer/",
   },
   {
     icon: <FaInstagram />,
@@ -285,7 +285,7 @@ ${message}`
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="munya.munaj@gmail.com"
                   value={form.email}
                   onChange={handleChange}
                   aria-invalid={Boolean(errors.email)}
