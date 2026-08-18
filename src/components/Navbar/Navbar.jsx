@@ -6,8 +6,10 @@ function Navbar() {
 
   const links = [
     { href: "#home", label: "Home" },
+    { href: "#projects", label: "Works" },
     { href: "#about", label: "About" },
-    { href: "#skills", label: "Skills" },
+    { href: "#services", label: "Services" },
+    { href: "#skills", label: "Experience" },
     { href: "#contact", label: "Contact" },
   ];
 
@@ -18,11 +20,11 @@ function Navbar() {
 
       sections.forEach((section) => {
         const sectionHeight = section.offsetHeight;
-        const sectionTop = section.offsetTop - 100;
+        const sectionTop = section.offsetTop - 120;
         const sectionId = section.getAttribute("id");
         const link = document.querySelector(`.nav-links a[href="#${sectionId}"]`);
 
-        if (link && scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+        if (link && scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
           link.classList.add("active");
         } else if (link) {
           link.classList.remove("active");
@@ -37,7 +39,7 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="container nav-inner">
-        <div className="logo">MM</div>
+        <div className="logo" aria-hidden>MM</div>
 
         <button
           className={`hamburger ${menuOpen ? "open" : ""}`}
@@ -49,10 +51,10 @@ function Navbar() {
           <span></span>
         </button>
 
-        <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
+        <ul className={`nav-links ${menuOpen ? "open" : ""}`} role="menu">
           {links.map((link) => (
-            <li key={link.href}>
-              <a href={link.href} onClick={() => setMenuOpen(false)}>
+            <li key={link.href} role="none">
+              <a role="menuitem" href={link.href} onClick={() => setMenuOpen(false)}>
                 {link.label}
               </a>
             </li>

@@ -1,60 +1,91 @@
 import "./Hero.css";
+import { useEffect, useState } from "react";
 import heroBg from "../../assets/heroe.png";
-import { FaRocket, FaChartLine, FaGraduationCap } from "react-icons/fa";
+import { fetchAbout } from "../../api";
+import { downloadPublicFile } from "../../utils/downloadFile";
 
 function Hero() {
+  const [about, setAbout] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    fetchAbout()
+      .then((data) => {
+        if (!active) return;
+        setAbout((prev) => ({ ...prev, ...data }));
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const profileSrc = about && about.profilePic
+    ? about.profilePic.startsWith("/uploads/")
+      ? `${import.meta.env.VITE_API_BASE_URL || "http://localhost:4000"}${about.profilePic}`
+      : about.profilePic
+    : null;
+
+  const handleDownloadCv = async () => {
+    const url = about?.cvUrl || "/Munyaradzi CV.pdf";
+    await downloadPublicFile(url, "Munyaradzi_Mbewe_CV.pdf");
+  };
+
   return (
-    <section id="home" className="hero"
+    <section id="home" className="hero editorial-hero"
       style={{
         backgroundImage: `
-          linear-gradient(rgba(8, 8, 8, 0.88), rgba(8, 8, 8, 0.92)),
+          linear-gradient(rgba(8, 8, 8, 0.92), rgba(8, 8, 8, 0.96)),
           url(${heroBg})
         `,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
       }}
     >
       <div className="container">
-        <div className="hero-content">
-          <p className="hero-intro">HELLO, I'M</p>
+        <div className="hero-grid">
 
-          <h1>Munyaradzi Mbewe</h1>
+          <div className="hero-left">
+            <div className="intro-badge">HEY, THERE</div>
 
-          <h2>Digital Marketer | Content Creator | Web Developer </h2>
+            <h1 className="hero-main">
+              I AM
+              <span className="hero-name">MUNYARADZI</span>
+            </h1>
 
-          <p className="hero-description">
-            Helping businesses and creators build powerful digital experiences
-            through marketing, technology, and creativity.
-          </p>
+            <div className="roles">
+              <div> DIGITAL MARKETER</div>
+              <div> WEB DEVELOPER</div>
+              <div> CREATIVE</div>
+            </div>
 
-          <div className="hero-buttons">
-            <a className="secondary-btn" href="#contact">
-              Contact Me
-            </a>
+            <p className="hero-copy">
+              I combine marketing, technology and creativity to build digital
+              experiences that help brands and creators grow.
+            </p>
+
+            <div className="hero-cta-row">
+              <a className="primary-btn" href="#projects">View My Work</a>
+
+              <button className="secondary-btn" onClick={handleDownloadCv}>
+                Download CV
+              </button>
+            </div>
+
+            <div className="status-badge">Available for new opportunities</div>
           </div>
 
-
-          <div className="stats-container">
-            <div className="stat-card">
-              <FaRocket className="stat-icon" />
-              <h3>6</h3>
-              <p>Projects Completed</p>
-            </div>
-
-            <div className="stat-card">
-              <FaChartLine className="stat-icon" />
-              <h3>10</h3>
-              <p>Marketing Campaigns</p>
-            </div>
-
-            <div className="stat-card">
-              <FaGraduationCap className="stat-icon" />
-              <h3>1</h3>
-              <p>Years Learning & Building</p>
-            </div>
+          <div className="hero-right">
+            {profileSrc ? (
+              <div className="profile-wrap">
+                <img src={profileSrc} alt="Munyaradzi Mbewe" className="profile-image" />
+              </div>
+            ) : (
+              <div className="profile-wrap placeholder">MM</div>
+            )}
           </div>
+
         </div>
       </div>
     </section>
