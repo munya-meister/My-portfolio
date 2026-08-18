@@ -3,164 +3,200 @@
  ==============================*/
 
 .achievements {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(10px);
-    padding: 120px 0;
-    color: white;
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  background: #0a0a0a;
+  color: white;
+  padding: 120px 0;
+  overflow: hidden;
 }
 
 .achievements::before {
-    content: "";
-    position: absolute;
-    width: 420px;
-    height: 420px;
-    background: rgba(255, 193, 7, 0.08);
-    border-radius: 50%;
-    filter: blur(140px);
-    top: -120px;
-    left: -120px;
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(220, 20, 60, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(120px);
+  top: -150px;
+  left: -150px;
+}
+
+.achievements::after {
+  content: "";
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(220, 20, 60, 0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(100px);
+  bottom: -120px;
+  right: -120px;
 }
 
 .section-header {
-    max-width: 760px;
-    margin: 0 auto 60px;
-    text-align: center;
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-bottom: 60px;
 }
 
 .section-tag {
-    color: #ffc107;
-    letter-spacing: 6px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    text-transform: uppercase;
+  color: #dc143c;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: block;
 }
 
 .section-header h2 {
-    margin: 16px 0 18px;
-    font-size: clamp(2.4rem, 4.2vw, 3.5rem);
-    font-weight: 800;
-    line-height: 1.1;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -2px;
 }
 
 .section-header p {
-    color: #bdbdbd;
-    font-size: 1.05rem;
-    line-height: 1.8;
+  color: #a0a0a0;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  max-width: 700px;
+  margin: 16px auto 0;
 }
 
-
-
 .filter-bar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 36px;
-    position: relative;
-    z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 48px;
+  position: relative;
+  z-index: 1;
 }
 
 .filter-chip {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #f5f5f5;
-    border-radius: 999px;
-    padding: 10px 16px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #a0a0a0;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .filter-chip:hover,
 .filter-chip.active {
-    background: rgba(255, 193, 7, 0.14);
-    border-color: #ffc107;
-    color: #ffc107;
+  background: rgba(220, 20, 60, 0.15);
+  border-color: rgba(220, 20, 60, 0.4);
+  color: #dc143c;
 }
 
-.add-certificate-wrap {
-    position: relative;
-    z-index: 1;
-    margin-bottom: 24px;
+.carousel-container {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+  margin-bottom: 32px;
 }
 
-.add-certificate-btn,
-.submit-certificate-btn {
-    background: linear-gradient(135deg, #ffc107, #ffdb58);
-    color: #111;
-    border: none;
-    border-radius: 999px;
-    padding: 10px 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.3s ease;
+.carousel-nav {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.add-certificate-btn:hover,
-.submit-certificate-btn:hover {
-    transform: translateY(-2px);
+.carousel-nav:hover:not(:disabled) {
+  background: rgba(220, 20, 60, 0.15);
+  border-color: rgba(220, 20, 60, 0.4);
+  color: #dc143c;
 }
 
-.certificate-form {
-    margin-top: 16px;
-    padding: 18px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+.carousel-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
-.certificate-form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-    margin-bottom: 14px;
+.carousel-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  flex: 1;
+  overflow: hidden;
 }
 
-.certificate-form label {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    color: #f4f4f4;
-    font-size: 0.92rem;
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
 }
 
-.certificate-form input {
-    padding: 10px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.2);
-    color: #fff;
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: #dc143c;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.indicator:hover {
+  background: rgba(220, 20, 60, 0.6);
 }
 
 .achievements-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-    max-width: 1320px;
-    margin: 0 auto;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  position: relative;
+  z-index: 2;
 }
 
 .achievement-card {
-    background: rgba(23, 23, 23, 0.93);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
-    overflow: hidden;
-    transition: all 0.35s ease;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 480px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.achievement-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #dc143c, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .achievement-card:hover {
-    border-color: #ffc107;
+  transform: translateY(-8px);
+  border-color: rgba(220, 20, 60, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(220, 20, 60, 0.15);
     box-shadow: 0 20px 50px rgba(255, 193, 7, 0.18);
 }
 

@@ -6,10 +6,12 @@ function Navbar() {
 
   const links = [
     { href: "#home", label: "Home" },
-    { href: "#projects", label: "Works" },
-    { href: "#about", label: "About" },
     { href: "#services", label: "Services" },
-    { href: "#skills", label: "Experience" },
+    { href: "#about", label: "About" },
+    { href: "#skills", label: "Capabilities" },
+    { href: "#experience", label: "Experience" },
+    { href: "#projects", label: "Projects" },
+    { href: "#certifications", label: "Certificates" },
     { href: "#contact", label: "Contact" },
   ];
 

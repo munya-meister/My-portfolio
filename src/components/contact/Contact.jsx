@@ -1,6 +1,5 @@
 import "./Contact.css";
 import { useState } from "react";
-import contactBg from "../../assets/heroe.png";
 import { motion } from "framer-motion";
 import {
   FaEnvelope,
@@ -173,35 +172,17 @@ ${message}`
   };
 
   return (
-    <section
-      className="contact"
-      id="contact"
-      style={{
-        backgroundImage: `
-          linear-gradient(rgba(8, 8, 8, 0.88), rgba(8, 8, 8, 0.92)),
-          url(${contactBg})
-        `,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-      }}
-    >
+    <section className="contact" id="contact">
       <div className="container contact-shell">
         <motion.div
-          className="contact-heading"
+          className="section-header"
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <p>LET'S CONNECT</p>
-          <h2>Let’s build a brand that feels unforgettable.</h2>
-          <p className="contact-intro">
-            Whether you need a polished website, a high-performing campaign, or
-            a creative collaboration, I’m ready to turn your vision into
-            something exceptional.
-          </p>
+          <span className="section-tag">LET'S CONNECT</span>
+          <h2>Get in Touch</h2>
         </motion.div>
 
         <div className="contact-grid">

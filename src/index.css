@@ -35,10 +35,13 @@ img {
 }
 :root{
     --bg:#0a0a0a;
-    --card:#181818;
-    --accent:#ffc107;
+    --card:#0f0f0f;
+    --accent:#dc143c;
+    --accent-glow:rgba(220, 20, 60, 0.3);
     --text:#ffffff;
-    --muted:#b8b8b8;
+    --muted:#a0a0a0;
+    --border:rgba(255, 255, 255, 0.08);
+    --glass:rgba(255, 255, 255, 0.03);
 
     --container:1400px;
     --container-gap:24px;

@@ -1,10 +1,6 @@
-/* ===========================
-   FOOTER SECTION
-=========================== */
-
 .footer {
   background: linear-gradient(180deg, rgba(10, 10, 10, 0.98), rgba(5, 5, 5, 1));
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding: 56px 0 24px;
   position: relative;
   overflow: hidden;
@@ -15,7 +11,7 @@
   position: absolute;
   width: 260px;
   height: 260px;
-  background: rgba(255, 193, 7, 0.08);
+  background: radial-gradient(circle, rgba(220, 20, 60, 0.08) 0%, transparent 70%);
   border-radius: 50%;
   filter: blur(110px);
   top: -80px;
@@ -30,7 +26,7 @@
   align-items: center;
   gap: 24px;
   padding-bottom: 26px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .footer-brand {
@@ -43,14 +39,15 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ffc107, #ffdb58);
-  color: #111;
+  background: rgba(220, 20, 60, 0.15);
+  color: #dc143c;
   font-weight: 800;
   margin-bottom: 14px;
+  border: 1px solid rgba(220, 20, 60, 0.3);
 }
 
 .footer-brand p {
-  color: #c5c5c5;
+  color: #a0a0a0;
   line-height: 1.8;
   font-size: 0.97rem;
 }
@@ -62,12 +59,12 @@
 }
 
 .footer-links a {
-  color: #f2f2f2;
+  color: #a0a0a0;
   transition: color 0.3s ease;
 }
 
 .footer-links a:hover {
-  color: #ffc107;
+  color: #dc143c;
 }
 
 .back-to-top {
@@ -76,26 +73,28 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  color: #ffc107;
+  background: rgba(255, 255, 255, 0.03);
+  color: #dc143c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   transition: transform 0.3s ease, background 0.3s ease;
 }
 
 .back-to-top:hover {
   transform: translateY(-3px);
-  background: rgba(255, 193, 7, 0.14);
+  background: rgba(220, 20, 60, 0.15);
+  border-color: rgba(220, 20, 60, 0.3);
 }
 
 .footer-bottom {
   padding-top: 20px;
-  color: #8a8a8a;
+  color: #666;
   display: flex;
   justify-content: center;
   text-align: center;
 }
 
 .heart {
-  color: #ffc107;
+  color: #dc143c;
   margin: 0 6px;
 }
 
@@ -109,3 +108,4 @@
     gap: 12px;
   }
 }
+

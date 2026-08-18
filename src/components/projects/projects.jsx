@@ -1,5 +1,4 @@
 import "./projects.css";
-import projectsBg from "../../assets/heroe.png";
 import { useEffect, useState } from "react";
 import initialProjects from "./ProjectsData";
 import ProjectCard from "./projectCard";
@@ -7,6 +6,8 @@ import { fetchProjects, createProject } from "../../api";
 
 function Projects() {
   const [projects, setProjects] = useState(initialProjects);
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -27,7 +28,7 @@ function Projects() {
           setProjects(
             data.map((item) => ({
               ...item,
-              image: item.fileUrl || item.image || "",
+              image: item.imageUrl || item.fileUrl || item.image || "",
               technologies: Array.isArray(item.technologies)
                 ? item.technologies
                 : typeof item.technologies === "string"
@@ -44,6 +45,27 @@ function Projects() {
       active = false;
     };
   }, []);
+
+  const categories = ["All", "Digital Marketing", "Web Development", "Creative Design"];
+
+  const filteredProjects =
+    activeFilter === "All"
+      ? projects
+      : projects.filter((project) => project.category === activeFilter);
+
+  const visibleProjects = filteredProjects.slice(currentIndex, currentIndex + 3);
+
+  const nextSlide = () => {
+    if (currentIndex < filteredProjects.length - 3) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -73,7 +95,7 @@ function Projects() {
       setProjects((current) => [
         {
           ...created,
-          image: created.fileUrl || created.image || "",
+          image: created.imageUrl || created.fileUrl || created.image || "",
           technologies: Array.isArray(created.technologies)
             ? created.technologies
             : typeof created.technologies === "string"
@@ -97,42 +119,69 @@ function Projects() {
   };
 
   return (
-    <section className="projects" id="projects" style={{
-        backgroundImage: `
-          linear-gradient(rgba(8, 8, 8, 0.88), rgba(8, 8, 8, 0.92)),
-          url(${projectsBg})
-        `,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-      }}
-    >
+    <section className="projects" id="projects">
       <div className="container">
+        <div className="section-header">
+          <span className="section-tag">SELECTED WORK</span>
+          <h2>Projects</h2>
+        </div>
 
-      <div className="projects-heading">
-        <p>SELECTED WORK</p>
-        <h2>Projects That Tell a Story</h2>
-        <span>
-          Every project represents a challenge solved through creativity,
-          technology and strategy.
-        </span>
-      </div>
+        <div className="filter-bar">
+          {categories.map((category) => (
+            <button
+              key={category}
+              className={`filter-chip ${activeFilter === category ? "active" : ""}`}
+              onClick={() => {
+                setActiveFilter(category);
+                setCurrentIndex(0);
+              }}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
 
-      <div className="add-certificate-wrap" />
+        {error && <p className="error-message">{error}</p>}
 
+        <div className="carousel-container">
+          <button
+            className="carousel-nav prev"
+            onClick={prevSlide}
+            disabled={currentIndex === 0}
+            aria-label="Previous projects"
+          >
+            ←
+          </button>
 
-      {error && <p className="error-message">{error}</p>}
+          <div className="carousel-track">
+            {visibleProjects.map((project, index) => (
+              <ProjectCard
+                key={project.id || `${currentIndex}-${index}`}
+                project={project}
+              />
+            ))}
+          </div>
 
-      {/* THIS CLASS NAME IS IMPORTANT */}
-      <div className="projects-grid">
-        {projects.map((project, index) => (
-          <ProjectCard
-            key={index}
-            project={project}
-          />
-        ))}
-      </div>
+          <button
+            className="carousel-nav next"
+            onClick={nextSlide}
+            disabled={currentIndex >= filteredProjects.length - 3}
+            aria-label="Next projects"
+          >
+            →
+          </button>
+        </div>
+
+        <div className="carousel-indicators">
+          {filteredProjects.map((_, index) => (
+            <button
+              key={index}
+              className={`indicator ${index === currentIndex ? "active" : ""}`}
+              onClick={() => setCurrentIndex(index)}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

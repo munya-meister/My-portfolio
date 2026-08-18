@@ -1,16 +1,14 @@
 import "./achievements.css";
-import AchievementsBg from "../../assets/heroe.png";
 import AchievementCard from "./achievementCard";
 import initialCertifications from "./certificationsData";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { fetchCertificates, createCertificate } from "../../api";
 
-
-
 function Achievements() {
   const [certificates, setCertificates] = useState(initialCertifications);
   const [activeFilter, setActiveFilter] = useState("All");
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -35,7 +33,7 @@ function Achievements() {
           setCertificates(
             data.map((certificate) => ({
               ...certificate,
-              image: certificate.fileUrl || certificate.image || "",
+              image: certificate.imageUrl || certificate.fileUrl || certificate.image || "",
               skills: Array.isArray(certificate.skills)
                 ? certificate.skills
                 : typeof certificate.skills === "string"
@@ -63,6 +61,20 @@ function Achievements() {
     activeFilter === "All"
       ? certificates
       : certificates.filter((certificate) => certificate.category === activeFilter);
+
+  const visibleCertificates = filteredCertifications.slice(currentIndex, currentIndex + 3);
+
+  const nextSlide = () => {
+    if (currentIndex < filteredCertifications.length - 3) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -98,7 +110,7 @@ function Achievements() {
       setCertificates((current) => [
         {
           ...created,
-          image: created.fileUrl || created.image,
+          image: created.imageUrl || created.fileUrl || created.image,
           skills: Array.isArray(created.skills)
             ? created.skills
             : typeof created.skills === "string"
@@ -125,20 +137,7 @@ function Achievements() {
   };
 
   return (
-    <section
-      className="achievements"
-      id="certifications"
-      style={{
-        backgroundImage: `
-          linear-gradient(rgba(8, 8, 8, 0.88), rgba(8, 8, 8, 0.92)),
-          url(${AchievementsBg})
-        `,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-      }}
-    >
+    <section className="achievements" id="certifications">
       <div className="container">
         <motion.div
           className="section-header"
@@ -147,22 +146,23 @@ function Achievements() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <span className="section-tag">CERTIFICATIONS & DEVELOPMENT</span>
-          <h2>Certifications & Professional Development</h2>
+          <span className="section-tag">CERTIFICATES & ACHIEVEMENTS</span>
+          <h2>Certificates & Achievements</h2>
           <p>
             A curated collection of qualifications, hands-on learning, and
             continuous growth across marketing, design, and modern technology.
           </p>
         </motion.div>
 
-
-
         <div className="filter-bar">
           {categories.map((category) => (
             <button
               key={category}
               className={`filter-chip ${activeFilter === category ? "active" : ""}`}
-              onClick={() => setActiveFilter(category)}
+              onClick={() => {
+                setActiveFilter(category);
+                setCurrentIndex(0);
+              }}
             >
               {category}
             </button>
@@ -171,13 +171,45 @@ function Achievements() {
 
         <div className="add-certificate-wrap" />
 
+        {error && <p className="error-message">{error}</p>}
 
-        <div className="achievements-grid">
-          {filteredCertifications.map((certificate, index) => (
-            <AchievementCard
-              key={certificate.id}
-              certificate={certificate}
-              index={index}
+        <div className="carousel-container">
+          <button
+            className="carousel-nav prev"
+            onClick={prevSlide}
+            disabled={currentIndex === 0}
+            aria-label="Previous certificates"
+          >
+            ←
+          </button>
+
+          <div className="carousel-track">
+            {visibleCertificates.map((certificate, index) => (
+              <AchievementCard
+                key={certificate.id || `${currentIndex}-${index}`}
+                certificate={certificate}
+                index={index}
+              />
+            ))}
+          </div>
+
+          <button
+            className="carousel-nav next"
+            onClick={nextSlide}
+            disabled={currentIndex >= filteredCertifications.length - 3}
+            aria-label="Next certificates"
+          >
+            →
+          </button>
+        </div>
+
+        <div className="carousel-indicators">
+          {filteredCertifications.map((_, index) => (
+            <button
+              key={index}
+              className={`indicator ${index === currentIndex ? "active" : ""}`}
+              onClick={() => setCurrentIndex(index)}
+              aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
