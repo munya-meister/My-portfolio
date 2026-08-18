@@ -183,7 +183,14 @@
     color:#ffc107;
 }
 
+/* Percentage */
 
+.skill-percent{
+
+    color:#ffc107;
+
+    font-weight:700;
+}
 
 /* ===========================
    PROGRESS BAR

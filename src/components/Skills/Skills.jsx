@@ -56,7 +56,7 @@ const SkillBar = ({ icon, name, level, className }) => {
           <span>{name}</span>
         </div>
 
-        
+        <small className="skill-percent">{level}%</small>
       </div>
 
       <div className="progress">
@@ -125,15 +125,15 @@ function Skills() {
             <span>Web Development</span>
           </h3>
 
-          <SkillBar icon={<FaHtml5 />} name="HTML5"className="html"/>
+          <SkillBar icon={<FaHtml5 />} name="HTML5" level={80} className="html"/>
 
-          <SkillBar icon={<FaCss3Alt />} name="CSS3"className="css"/>
+          <SkillBar icon={<FaCss3Alt />} name="CSS3" level={92} className="css"/>
 
-          <SkillBar icon={<FaJsSquare />} name="JavaScript"className="js"/>
+          <SkillBar icon={<FaJsSquare />} name="JavaScript" level={60} className="js"/>
 
-          <SkillBar icon={<FaReact />} name="React"className="react"/>
+          <SkillBar icon={<FaReact />} name="React" level={60} className="react"/>
 
-          <SkillBar icon={<FaWordpress />} name="WordPress"className="wordpress"/>
+          <SkillBar icon={<FaWordpress />} name="WordPress" level={65} className="wordpress"/>
 
         </motion.div>
 
@@ -158,15 +158,15 @@ function Skills() {
 
           </h3>
 
-          <SkillBar icon={<SiGoogleads />} name="Google Ads"className="ads"/>
+          <SkillBar icon={<SiGoogleads />} name="Google Ads" level={90} className="ads"/>
 
-          <SkillBar icon={<SiMeta />} name="Meta Ads"className="meta"/>
+          <SkillBar icon={<SiMeta />} name="Meta Ads" level={70} className="meta"/>
 
-          <SkillBar icon={<SiGoogleanalytics />} name="Analytics" className="analytics"/>
+          <SkillBar icon={<SiGoogleanalytics />} name="Analytics" level={86} className="analytics"/>
 
-          <SkillBar icon={<FaBullhorn />} name="SEO"className="seo"/>
+          <SkillBar icon={<FaBullhorn />} name="SEO" level={92} className="seo"/>
 
-          <SkillBar icon={<FaPaintBrush />} name="Canva"className="canva"/>
+          <SkillBar icon={<FaPaintBrush />} name="Canva" level={94} className="canva"/>
 
         </motion.div>
 
@@ -191,15 +191,15 @@ function Skills() {
 
           </h3>
 
-          <SkillBar icon={<FaMusic />} name="FL Studio" className="fl"/>
+          <SkillBar icon={<FaMusic />} name="FL Studio" level={96} className="fl"/>
 
-          <SkillBar icon={<FaMicrophone />} name="Music Production"className="music"/>
+          <SkillBar icon={<FaMicrophone />} name="Music Production" level={95} className="music"/>
 
-          <SkillBar icon={<FaPaintBrush />} name="Adobe Photoshop"className="photoshop"/>
+          <SkillBar icon={<FaPaintBrush />} name="Adobe Photoshop" level={60} className="photoshop"/>
 
-          <SkillBar icon={<FaMicrophone />} name="Premiere Pro"className="premiere"/>
+          <SkillBar icon={<FaMicrophone />} name="Premiere Pro" level={88} className="premiere"/>
 
-          <SkillBar icon={<FaBullhorn />} name="Brand Strategy"className="branding"/>
+          <SkillBar icon={<FaBullhorn />} name="Brand Strategy" level={91} className="branding"/>
 
         </motion.div>
 
