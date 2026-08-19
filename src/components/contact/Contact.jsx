@@ -3,8 +3,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   FaEnvelope,
-  FaPhoneAlt,
-  FaMapMarkerAlt,
   FaGithub,
   FaLinkedin,
   FaInstagram,
@@ -22,37 +20,16 @@ const initialForm = {
   message: "",
 };
 
-const contactMethods = [
-  {
-    icon: <FaEnvelope />,
-    label: "Email",
-    value: "munya.munaj@gmail.com",
-    href: "https://mail.google.com/mail/?view=cm&to=munya.munaj@gmail.com",
-  },
-  {
-    icon: <FaPhoneAlt />,
-    label: "Phone",
-    value: "+263 776 717 471",
-    href: "tel:+263719692697",
-  },
-  {
-    icon: <FaMapMarkerAlt />,
-    label: "Location",
-    value: "Harare, Zimbabwe",
-    href: "https://maps.google.com/?q=Harare+Zimbabwe",
-  },
-];
-
 const socialLinks = [
-  {
-    icon: <FaGithub />,
-    label: "GitHub",
-    href: "https://github.com",
-  },
   {
     icon: <FaLinkedin />,
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/munyaradzi-mbewe-digital-marketer/",
+  },
+  {
+    icon: <FaGithub />,
+    label: "GitHub",
+    href: "https://github.com",
   },
   {
     icon: <FaInstagram />,
@@ -69,7 +46,7 @@ function Contact() {
   const [mailtoUrl, setMailtoUrl] = useState("");
 
   const buildMailtoLink = ({ name, email, subject, message }) => {
-    const mailtoAddress = contactMethods[0].value;
+    const mailtoAddress = "munyaradzimbe@gmail.com";
     const mailSubject = encodeURIComponent(subject || "Portfolio Contact");
     const mailBody = encodeURIComponent(
       `Name: ${name}
@@ -171,149 +148,148 @@ ${message}`
     }
   };
 
+  const field =
+    "w-full border-b border-white/15 bg-transparent py-4 text-lg text-white outline-none placeholder:text-white/30 transition-colors focus:border-[#ed1745]";
+
   return (
     <section className="contact" id="contact">
-      <div className="container contact-shell">
-        <motion.div
-          className="section-header"
-          initial={{ opacity: 0, y: -30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <span className="section-tag">LET'S CONNECT</span>
-          <h2>Get in Touch</h2>
-        </motion.div>
+      <div className="contact-background"></div>
+      <div className="contact-overlay"></div>
+      
+      <div className="contact-container">
+        <div className="contact-header">
+          <p className="header-tag">LET'S WORK TOGETHER</p>
+          <div className="header-title">
+            <h2>START A</h2>
+            <h2 className="title-white">PROJECT</h2>
+          </div>
+          <div className="header-content">
+            <p className="editorial-text">
+              Tell me what you're building and I'll come back with a plan.
+            </p>
+            <div className="header-location">
+              <p>Harare</p>
+              <p>Zimbabwe</p>
+            </div>
+          </div>
+        </div>
 
         <div className="contact-grid">
-          <motion.div
-            className="contact-card contact-main"
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <h3>Start a conversation</h3>
-            <p>
-              Available for freelance projects, consulting, and creative
-              partnerships.
-            </p>
-
-            <div className="contact-list">
-              {contactMethods.map((item) => (
-                <a
-                  key={item.label}
-                  className="contact-item"
-                  href={item.href}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <span className="contact-icon">{item.icon}</span>
-                  <div>
-                    <strong>{item.label}</strong>
-                    <span>{item.value}</span>
-                  </div>
-                </a>
-              ))}
-            </div>
-
-            <div className="contact-actions">
+          <aside className="contact-sidebar">
+            <p className="sidebar-label">Contact</p>
+            <div className="sidebar-section">
+              <p className="sidebar-section-label">Email</p>
               <a
-                className="primary-btn"
-                href="https://mail.google.com/mail/?view=cm&to=munyaradzi.mbewe01@gmail.com"
-                target="_blank"
-                rel="noreferrer"
+                href="mailto:munyaradzimbe@gmail.com"
+                className="sidebar-link"
               >
-                Write Me
-              </a>
-              <a className="secondary-btn" href="#projects">
-                Explore Projects
+                munyaradzimbe@gmail.com
               </a>
             </div>
-          </motion.div>
+            <div className="sidebar-section">
+              <p className="sidebar-section-label">Availability</p>
+              <p className="sidebar-text">Available for new opportunities.</p>
+            </div>
+            <div className="sidebar-section">
+              <p className="sidebar-section-label">Social</p>
+              <div className="sidebar-social">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="sidebar-social-link"
+                  >
+                    {link.label} ↗
+                  </a>
+                ))}
+              </div>
+            </div>
+          </aside>
 
-          <motion.form
-            className="contact-card contact-form"
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            onSubmit={handleSubmit}
-          >
-            <div className="form-row">
-              <label htmlFor="name">
-                Name
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Your name"
-                  value={form.name}
-                  onChange={handleChange}
-                  aria-invalid={Boolean(errors.name)}
-                  disabled={isSubmitting}
-                />
-                {errors.name ? (
-                  <span className="error-text">{errors.name}</span>
-                ) : null}
-              </label>
+          <form className="contact-form" onSubmit={handleSubmit}>
+            <div className="form-header">
+              <p className="form-label">Start a conversation</p>
+              <span className="form-counter">01 / 04</span>
             </div>
 
-            <div className="form-row">
-              <label htmlFor="email">
-                Email
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="munya.munaj@gmail.com"
-                  value={form.email}
-                  onChange={handleChange}
-                  aria-invalid={Boolean(errors.email)}
-                  disabled={isSubmitting}
-                />
-                {errors.email ? (
-                  <span className="error-text">{errors.email}</span>
-                ) : null}
+            <div className="form-field">
+              <label htmlFor="name" className="field-label">
+                01 — Your name
               </label>
+              <input
+                id="name"
+                name="name"
+                required
+                placeholder="Munyaradzi Mbewe"
+                className={field}
+                value={form.name}
+                onChange={handleChange}
+                disabled={isSubmitting}
+              />
+              {errors.name ? (
+                <span className="error-text">{errors.name}</span>
+              ) : null}
             </div>
 
-            <div className="form-row">
-              <label htmlFor="subject">
-                Subject
-                <input
-                  id="subject"
-                  name="subject"
-                  type="text"
-                  placeholder="Website, campaign, music project"
-                  value={form.subject}
-                  onChange={handleChange}
-                  aria-invalid={Boolean(errors.subject)}
-                  disabled={isSubmitting}
-                />
-                {errors.subject ? (
-                  <span className="error-text">{errors.subject}</span>
-                ) : null}
+            <div className="form-field">
+              <label htmlFor="email" className="field-label">
+                02 — Email address
               </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="you@example.com"
+                className={field}
+                value={form.email}
+                onChange={handleChange}
+                disabled={isSubmitting}
+              />
+              {errors.email ? (
+                <span className="error-text">{errors.email}</span>
+              ) : null}
             </div>
 
-            <div className="form-row">
-              <label htmlFor="message">
-                Message
-                <textarea
-                  id="message"
-                  name="message"
-                  rows="5"
-                  placeholder="Tell me about your idea..."
-                  value={form.message}
-                  onChange={handleChange}
-                  aria-invalid={Boolean(errors.message)}
-                  disabled={isSubmitting}
-                />
-                {errors.message ? (
-                  <span className="error-text">{errors.message}</span>
-                ) : null}
+            <div className="form-field">
+              <label htmlFor="subject" className="field-label">
+                03 — Subject
               </label>
+              <input
+                id="subject"
+                name="subject"
+                required
+                placeholder="What can I help you with?"
+                className={field}
+                value={form.subject}
+                onChange={handleChange}
+                disabled={isSubmitting}
+              />
+              {errors.subject ? (
+                <span className="error-text">{errors.subject}</span>
+              ) : null}
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="message" className="field-label">
+                04 — Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows={6}
+                placeholder="Tell me a little about your project..."
+                className={`${field} resize-none`}
+                value={form.message}
+                onChange={handleChange}
+                disabled={isSubmitting}
+              />
+              {errors.message ? (
+                <span className="error-text">{errors.message}</span>
+              ) : null}
             </div>
 
             {feedback.message ? (
@@ -342,38 +318,26 @@ ${message}`
               </a>
             ) : null}
 
-            <button
-              type="submit"
-              className="primary-btn full-width"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <FaSpinner className="spinner" />
-                  Sending...
-                </>
-              ) : (
-                <>
-                  <FaPaperPlane />
-                  Send Message
-                </>
-              )}
-            </button>
-
-            <div className="social-links">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {link.icon}
-                </a>
-              ))}
+            <div className="form-submit">
+              <button
+                type="submit"
+                className="submit-btn"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Sending..." : "Send message"}
+                {!isSubmitting && <span>→</span>}
+              </button>
+              <span className="submit-note">
+                Usually replies within 24–48 hours
+              </span>
             </div>
-          </motion.form>
+          </form>
         </div>
+
+        <footer className="contact-footer">
+          <span>© {new Date().getFullYear()} Munyaradzi Mbewe</span>
+          <span>Digital Marketing · Web Development · Creative Design</span>
+        </footer>
       </div>
     </section>
   );

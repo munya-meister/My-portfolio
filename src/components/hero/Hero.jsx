@@ -9,10 +9,24 @@ const defaultAbout = {
   cvUrl: "/Munyaradzi CV.pdf",
 };
 
+const columnItems = [
+  {
+    title: "Digital Marketing",
+    body: "Web strategy, SEO, AEO and content.",
+  },
+  {
+    title: "Web Development",
+    body: "Modern responsive websites and applications.",
+  },
+  {
+    title: "Creative Design",
+    body: "UI/UX, visual design and digital experiences.",
+  },
+];
+
 function Hero() {
   const [about, setAbout] = useState(defaultAbout);
   const [downloadMessage, setDownloadMessage] = useState("");
-  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -27,12 +41,6 @@ function Hero() {
       active = false;
     };
   }, []);
-
-  const profileSrc = about.profilePic
-    ? about.profilePic.startsWith("/uploads/")
-      ? `${import.meta.env.VITE_API_BASE_URL || "http://localhost:4000"}${about.profilePic}`
-      : about.profilePic
-    : null;
 
   const handleDownloadCv = async () => {
     setDownloadMessage("");
@@ -49,49 +57,46 @@ function Hero() {
     }
   };
 
-  const handleImageError = () => {
-    setImageError(true);
-  };
-
   return (
     <section id="home" className="hero">
-      <div className="container">
+      <div className="hero-background"></div>
+      <div className="hero-overlay"></div>
+      <div className="hero-red-overlay"></div>
+      
+      <div className="hero-container">
         <div className="hero-grid">
-          <div className="hero-left">
-            <div className="intro-badge">HEY,</div>
+          <div className="hero-main">
+            <div className="eyebrow">HEY, THERE</div>
 
-            <h1 className="hero-main">
-              I'M
-              <span className="hero-name">MUNYARADZI.</span>
+            <h1 className="hero-title">
+              I AM
+              <br />
+              MUNYARADZI
             </h1>
 
-            <div className="roles" aria-label="Professional roles">
-              <span>DIGITAL MARKETER</span>
-              <span className="separator">•</span>
-              <span>WEB DEVELOPER</span>
-              <span className="separator">•</span>
-              <span>CREATIVE DESIGNER</span>
-            </div>
+            <p className="hero-roles">
+              DIGITAL MARKETER • WEB DEVELOPER • CREATIVE DESIGNER
+            </p>
 
             <p className="hero-statement">
-              I create digital experiences that combine strategy, technology and creative design.
+              Specialised in digital marketing, web development and creative
+              design.
             </p>
 
             <div className="hero-cta-row">
-              <button className="primary-btn" onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
-                VIEW MY WORK
-              </button>
-              <button className="secondary-btn" onClick={handleDownloadCv}>
+              <a
+                href={about.cvUrl ?? "#"}
+                download
+                className="primary-btn"
+                onClick={handleDownloadCv}
+              >
                 DOWNLOAD CV
-              </button>
-            </div>
+              </a>
 
-            {about.availability && (
-              <div className="availability-badge">
-                <span className="availability-dot"></span>
-                {about.availability}
-              </div>
-            )}
+              <span className="availability-text">
+                {about.availability ?? "Available for new opportunities"}
+              </span>
+            </div>
 
             {downloadMessage && (
               <p className="download-feedback" role="status" aria-live="polite">
@@ -100,26 +105,18 @@ function Hero() {
             )}
           </div>
 
-          <div className="hero-right">
-            <div className="portrait-card">
-              {!imageError && profileSrc ? (
-                <img
-                  src={profileSrc}
-                  alt="Munyaradzi Mbewe"
-                  className="portrait-image"
-                  onError={handleImageError}
-                />
-              ) : null}
-              <div className="portrait-info">
-                <div className="portrait-name">MUNYARADZI MBEWE</div>
-                <div className="portrait-roles">
-                  <span>Digital Marketing</span>
-                  <span>Web Development</span>
-                  <span>Creative Design</span>
-                </div>
+          <aside className="hero-sidebar">
+            {columnItems.map((item) => (
+              <div key={item.title} className="sidebar-item">
+                <p className="sidebar-title">{item.title}</p>
+                <p className="sidebar-body">{item.body}</p>
               </div>
+            ))}
+
+            <div className="sidebar-location">
+              <p className="sidebar-title">Based in Harare, Zimbabwe</p>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </section>

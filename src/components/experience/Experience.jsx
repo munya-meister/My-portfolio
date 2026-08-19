@@ -1,60 +1,99 @@
 import "./Experience.css";
-import { motion } from "framer-motion";
 
-const experienceData = [
+const rows = [
   {
-    role: "Digital Marketing Specialist",
-    organization: "Company Name",
-    period: "2023 - Present",
-    description: "Led digital marketing campaigns, SEO optimization, and content strategy initiatives that drove measurable growth in engagement and conversions."
+    years: "01",
+    title: "Digital Marketing",
+    description:
+      "Building digital growth strategies that connect brands with the right audiences.",
+    tags: ["SEO", "AEO", "Social Media", "Content Strategy", "Analytics"],
   },
   {
-    role: "Web Developer",
-    organization: "Company Name",
-    period: "2022 - 2023",
-    description: "Developed responsive web applications using React, integrated APIs, and implemented modern frontend solutions for client projects."
+    years: "02",
+    title: "Creative Design",
+    description:
+      "Creating visual identities, interfaces and marketing creatives that communicate clearly.",
+    tags: ["UI/UX", "Figma", "Canva", "Graphic Design"],
   },
   {
-    role: "Creative Designer",
-    organization: "Company Name",
-    period: "2021 - 2022",
-    description: "Created visual designs, brand identities, and marketing creatives using Figma and Canva for various digital campaigns."
-  }
+    years: "03",
+    title: "Web Development",
+    description:
+      "Designing and developing responsive digital experiences from interface to deployment.",
+    tags: ["React", "JavaScript", "Python", "Django", "HTML/CSS", "Git/GitHub"],
+  },
 ];
 
 function Experience() {
   return (
     <section className="experience" id="experience">
-      <div className="container">
-        <motion.div
-          className="section-header"
-          initial={{ opacity: 0, y: -30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="section-tag">EXPERIENCE</span>
-          <h2>Work History</h2>
-        </motion.div>
+      <div className="experience-background"></div>
+      <div className="experience-overlay"></div>
+      
+      <div className="experience-container">
+        <div className="experience-header">
+          <div className="header-main">
+            <p className="eyebrow">CAPABILITIES</p>
+            <h2 className="experience-title">
+              EXPERIENCE
+              <br />
+              &amp; SKILLS
+            </h2>
+          </div>
+          <div className="header-description">
+            <p className="editorial-text">
+              Three disciplines. One approach:
+              <br />
+              build work that performs.
+            </p>
+            <p className="description-text">
+              I work across marketing, design and development, bringing
+              strategy and execution together to create useful digital
+              experiences.
+            </p>
+          </div>
+        </div>
 
-        <div className="timeline">
-          {experienceData.map((exp, index) => (
-            <motion.div
-              key={index}
-              className="timeline-item"
-              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-            >
-              <div className="timeline-content">
-                <div className="timeline-period">{exp.period}</div>
-                <h3 className="timeline-role">{exp.role}</h3>
-                <div className="timeline-organization">{exp.organization}</div>
-                <p className="timeline-description">{exp.description}</p>
+        <div className="experience-list">
+          {rows.map((row) => (
+            <article key={row.title} className="experience-item">
+              <div className="experience-item-grid">
+                <div className="item-number">
+                  <span>{row.years}</span>
+                </div>
+                <div className="item-content">
+                  <h3 className="item-title">{row.title}</h3>
+                  <p className="item-description">{row.description}</p>
+                </div>
+                <div className="item-skills">
+                  {row.tags.map((tag) => (
+                    <span key={tag} className="skill-tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </motion.div>
+            </article>
           ))}
+        </div>
+
+        <div className="experience-stats">
+          <div className="stat-item">
+            <p className="stat-number">08</p>
+            <p className="stat-label">Projects</p>
+          </div>
+          <div className="stat-item">
+            <p className="stat-number">03</p>
+            <p className="stat-label">Disciplines</p>
+          </div>
+          <div className="stat-item">
+            <p className="stat-number">06+</p>
+            <p className="stat-label">Core Tools</p>
+          </div>
+          <div className="stat-item">
+            <p className="stat-number">01</p>
+            <p className="stat-label">Creative Direction</p>
+          </div>
         </div>
       </div>
     </section>

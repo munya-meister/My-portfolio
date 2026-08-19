@@ -1,49 +1,69 @@
 import "./services.css";
 
-function Services() {
-  const services = [
-    {
-      title: "Digital Marketing",
-      desc: "Strategy, paid acquisition, content and analytics to grow brands.",
-    },
-    {
-      title: "Web Development",
-      desc: "Modern front-end experiences with React and clean build tooling.",
-    },
-    {
-      title: "UI/UX Design",
-      desc: "Editorial-led interfaces, prototyping and brand systems in Figma.",
-    },
-    {
-      title: "SEO + AEO",
-      desc: "Search-first content structure and technical optimizations.",
-    },
-    {
-      title: "Content & Social Media",
-      desc: "Social-first content strategy and production for audience growth.",
-    },
-    {
-      title: "Creative Services",
-      desc: "Visual direction, music writing and creative consulting.",
-    },
-  ];
+const services = [
+  {
+    title: "Digital Marketing",
+    body: "Full-funnel strategy, campaign builds and reporting.",
+  },
+  {
+    title: "Web Development",
+    body: "React and Django applications built to scale.",
+  },
+  {
+    title: "UI/UX Design",
+    body: "Interfaces designed around real user behaviour.",
+  },
+  {
+    title: "SEO + AEO",
+    body: "Technical SEO and answer-engine visibility.",
+  },
+  {
+    title: "Social Media Marketing",
+    body: "Content systems that grow organic reach.",
+  },
+  {
+    title: "Creative Services",
+    body: "Brand visuals, decks and digital assets.",
+  },
+];
 
+function Services() {
   return (
     <section id="services" className="services">
-      <div className="container">
-        <div className="services-heading">
-          <p>SERVICES</p>
-          <h2>What I Do</h2>
-          <span>Selected services offered with a premium editorial approach.</span>
+      <div className="services-container">
+        <div className="services-header">
+          <div className="header-main">
+            <p className="eyebrow">WHAT I DO</p>
+            <h2 className="services-title">SERVICES</h2>
+          </div>
+          <div className="header-description">
+            <p className="editorial-text">
+              Strategy, design and technology working together to create
+              digital work that delivers.
+            </p>
+          </div>
         </div>
 
-        <div className="services-grid">
-          {services.map((s) => (
-            <article className="service-card" key={s.title}>
-              <h3>{s.title}</h3>
-              <p>{s.desc}</p>
+        <div className="services-list">
+          {services.map((service, i) => (
+            <article key={service.title} className="service-item">
+              <div className="service-item-grid">
+                <span className="service-number">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="service-title">{service.title}</h3>
+                <p className="service-description">{service.body}</p>
+                <div className="service-arrow">
+                  <span className="arrow-icon">↗</span>
+                </div>
+              </div>
             </article>
           ))}
+        </div>
+
+        <div className="services-footer">
+          <span>Strategy • Design • Development</span>
+          <span>Harare, Zimbabwe</span>
         </div>
       </div>
     </section>
