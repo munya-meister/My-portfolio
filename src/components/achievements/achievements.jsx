@@ -1,53 +1,43 @@
 import "./achievements.css";
-import AchievementCard from "./achievementCard";
 import initialCertifications from "./certificationsData";
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { fetchCertificates, createCertificate } from "../../api";
+import { fetchCertificates } from "../../api";
 
 function Achievements() {
   const [certificates, setCertificates] = useState(initialCertifications);
   const [activeFilter, setActiveFilter] = useState("All");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    platform: "",
-    date: "",
-    category: "",
-    skills: "",
-    url: "",
-    verifyUrl: "",
-    file: null,
-  });
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
+
     fetchCertificates()
       .then((data) => {
         if (!active) return;
+
         if (Array.isArray(data) && data.length > 0) {
           setCertificates(
             data.map((certificate) => ({
               ...certificate,
-              image: certificate.imageUrl || certificate.fileUrl || certificate.image || "",
+              image:
+                certificate.imageUrl ||
+                certificate.fileUrl ||
+                certificate.image ||
+                "",
               skills: Array.isArray(certificate.skills)
                 ? certificate.skills
                 : typeof certificate.skills === "string"
-                ? certificate.skills.split(",").map((skill) => skill.trim()).filter(Boolean)
+                ? certificate.skills
+                    .split(",")
+                    .map((skill) => skill.trim())
+                    .filter(Boolean)
                 : [],
             }))
           );
         }
       })
       .catch(() => {
-        setError("Unable to load backend certificates, using local data.");
-      })
-      .finally(() => {
-        if (active) setLoading(false);
+        setError("Unable to load certificates.");
       });
 
     return () => {
@@ -55,182 +45,158 @@ function Achievements() {
     };
   }, []);
 
-  const categories = ["All", ...new Set(certificates.map((certificate) => certificate.category))];
+  const categories = [
+    "All",
+    ...new Set(
+      certificates
+        .map((certificate) => certificate.category)
+        .filter(Boolean)
+    ),
+  ];
 
-  const filteredCertifications =
+  const filteredCertificates =
     activeFilter === "All"
       ? certificates
-      : certificates.filter((certificate) => certificate.category === activeFilter);
-
-  const [cardsPerView, setCardsPerView] = useState(3);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setCardsPerView(1);
-      } else if (window.innerWidth < 1100) {
-        setCardsPerView(2);
-      } else {
-        setCardsPerView(3);
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const visibleCertificates = filteredCertifications.slice(currentIndex, currentIndex + cardsPerView);
-
-  const nextSlide = () => {
-    if (currentIndex < filteredCertifications.length - cardsPerView) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
-
-  const prevSlide = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((current) => ({ ...current, [name]: value }));
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0] || null;
-    setFormData((current) => ({ ...current, file }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!formData.title.trim() || !formData.platform.trim()) {
-      return;
-    }
-
-    const payload = new FormData();
-    payload.append("title", formData.title.trim());
-    payload.append("platform", formData.platform.trim());
-    payload.append("date", formData.date.trim() || "Recently completed");
-    payload.append("category", formData.category.trim() || "General");
-    payload.append("skills", formData.skills.trim());
-    payload.append("url", formData.url.trim());
-    payload.append("verifyUrl", formData.verifyUrl.trim());
-    if (formData.file) {
-      payload.append("file", formData.file);
-    }
-
-    try {
-      const created = await createCertificate(payload);
-      setCertificates((current) => [
-        {
-          ...created,
-          image: created.imageUrl || created.fileUrl || created.image,
-          skills: Array.isArray(created.skills)
-            ? created.skills
-            : typeof created.skills === "string"
-            ? created.skills.split(",").map((skill) => skill.trim()).filter(Boolean)
-            : [],
-        },
-        ...current,
-      ]);
-    } catch (err) {
-      setError("Could not save certificate to backend. Check server connection.");
-    }
-
-    setFormData({
-      title: "",
-      platform: "",
-      date: "",
-      category: "",
-      skills: "",
-      url: "",
-      verifyUrl: "",
-      file: null,
-    });
-    setShowForm(false);
-  };
+      : certificates.filter(
+          (certificate) => certificate.category === activeFilter
+        );
 
   return (
     <section className="achievements" id="certifications">
-      <div className="container">
-        <motion.div
-          className="section-header"
-          initial={{ opacity: 0, y: -25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <span className="section-tag">CERTIFICATES & ACHIEVEMENTS</span>
-          <h2>Certificates & Achievements</h2>
-          <p>
-            A curated collection of qualifications, hands-on learning, and
-            continuous growth across marketing, design, and modern technology.
-          </p>
-        </motion.div>
+      <div className="achievements-container">
 
-        <div className="filter-bar">
-          {categories.map((category) => (
-            <button
-              key={category}
-              className={`filter-chip ${activeFilter === category ? "active" : ""}`}
-              onClick={() => {
-                setActiveFilter(category);
-                setCurrentIndex(0);
-              }}
-            >
-              {category}
-            </button>
-          ))}
+        {/* HEADER */}
+        <div className="achievements-header">
+          <h2 className="achievements-title">
+            Certificates
+          </h2>
+
+          <p className="achievements-description">
+            A collection of certifications and continuous learning
+            across marketing, design, technology and digital skills.
+          </p>
         </div>
 
-        <div className="add-certificate-wrap" />
-
-        {error && <p className="error-message">{error}</p>}
-
-        <div className="carousel-container">
-          <button
-            className="carousel-nav prev"
-            onClick={prevSlide}
-            disabled={currentIndex === 0}
-            aria-label="Previous certificates"
-          >
-            ←
-          </button>
-
-          <div className="carousel-track" style={{ gridTemplateColumns: `repeat(${cardsPerView}, 1fr)` }}>
-            {visibleCertificates.map((certificate, index) => (
-              <AchievementCard
-                key={certificate.id || `${currentIndex}-${index}`}
-                certificate={certificate}
-                index={index}
-              />
+        {/* FILTERS */}
+        {categories.length > 1 && (
+          <div className="certificate-filters">
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`certificate-filter ${
+                  activeFilter === category ? "active" : ""
+                }`}
+                onClick={() => setActiveFilter(category)}
+              >
+                {category}
+              </button>
             ))}
           </div>
+        )}
 
-          <button
-            className="carousel-nav next"
-            onClick={nextSlide}
-            disabled={currentIndex >= filteredCertifications.length - cardsPerView}
-            aria-label="Next certificates"
-          >
-            →
-          </button>
-        </div>
+        {error && (
+          <p className="certificate-error">
+            {error}
+          </p>
+        )}
 
-        <div className="carousel-indicators">
-          {filteredCertifications.map((_, index) => (
-            <button
-              key={index}
-              className={`indicator ${index === currentIndex ? "active" : ""}`}
-              onClick={() => setCurrentIndex(index)}
-              aria-label={`Go to slide ${index + 1}`}
-            />
+        {/* CERTIFICATE STRIP */}
+        <div className="certificate-strip">
+          {filteredCertificates.map((certificate, index) => (
+            <figure
+              key={certificate.id || index}
+              className={`certificate-item ${
+                index % 2 === 0
+                  ? "certificate-large"
+                  : "certificate-small"
+              }`}
+            >
+              {/* IMAGE */}
+              <div className="certificate-image-wrap">
+                {certificate.url ? (
+                  <a
+                    href={certificate.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`View ${certificate.title} certificate`}
+                  >
+                    <img
+                      src={certificate.image}
+                      alt={`${certificate.platform || "Certificate"} certificate: ${certificate.title}`}
+                      loading="lazy"
+                      className="certificate-image"
+                    />
+                  </a>
+                ) : (
+                  <img
+                    src={certificate.image}
+                    alt={`${certificate.platform || "Certificate"} certificate: ${certificate.title}`}
+                    loading="lazy"
+                    className="certificate-image"
+                  />
+                )}
+              </div>
+
+              {/* INFORMATION */}
+              <figcaption>
+                <span className="certificate-platform">
+                  {certificate.platform}
+                </span>
+
+                <h3 className="certificate-name">
+                  {certificate.title}
+                </h3>
+
+                {certificate.date && (
+                  <span className="certificate-date">
+                    {certificate.date}
+                  </span>
+                )}
+
+                {/* SKILLS */}
+                {certificate.skills?.length > 0 && (
+                  <div className="certificate-skills">
+                    {certificate.skills.map((skill, skillIndex) => (
+                      <span key={skillIndex}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* BUTTONS */}
+                {(certificate.url || certificate.verifyUrl) && (
+                  <div className="certificate-actions">
+
+                    {certificate.url && (
+                      <a
+                        href={certificate.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="certificate-btn certificate-btn-primary"
+                      >
+                        View Certificate →
+                      </a>
+                    )}
+
+                    {certificate.verifyUrl && (
+                      <a
+                        href={certificate.verifyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="certificate-btn certificate-btn-secondary"
+                      >
+                        Verify Credential
+                      </a>
+                    )}
+
+                  </div>
+                )}
+              </figcaption>
+            </figure>
           ))}
         </div>
+
       </div>
     </section>
   );
