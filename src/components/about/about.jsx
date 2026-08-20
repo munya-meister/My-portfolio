@@ -75,7 +75,7 @@ function About() {
                   className="portrait-image"
                   onError={handleImageError}
                 />
-                <div className="portrait-label">Portrait</div>
+                <div className="portrait-label">“Munyaradzi Mbewe, a digital marketer, web developer and creative designer.”</div>
               </div>
             ) : (
               <div className="portrait-placeholder">
