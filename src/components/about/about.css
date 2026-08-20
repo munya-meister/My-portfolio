@@ -149,22 +149,6 @@
   font-family: 'Arial Black', 'Arial', sans-serif;
 }
 
-.editorial-intro {
-  margin-top: 24px;
-  max-width: 64rem;
-  font-family: Georgia, serif;
-  font-size: 1.5rem;
-  font-style: italic;
-  line-height: 1.4;
-  color: #ffffff;
-}
-
-@media (min-width: 768px) {
-  .editorial-intro {
-    font-size: 1.875rem;
-  }
-}
-
 .bio-paragraphs {
   margin-top: 32px;
   max-width: 48rem;
@@ -248,9 +232,6 @@
     padding: 40px 20px;
   }
   
-  .editorial-intro {
-    font-size: 1.25rem;
-  }
   
   .about-actions {
     flex-direction: column;

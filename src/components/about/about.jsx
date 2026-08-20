@@ -5,7 +5,7 @@ import { downloadPublicFile } from "../../utils/downloadFile";
 
 const defaultAbout = {
   profilePic: "",
-  heading: "About Me",
+  heading: "EXPERT IN BUILDING BRANDS, WEBSITES & CREATIVE EXPERIENCES.",
   bio1: "I'm a digital professional who combines strategic marketing, technical development, and creative design to build comprehensive digital solutions.",
   bio2: "My approach integrates data-driven marketing strategies with modern web technologies and thoughtful design thinking to create experiences that connect with audiences and drive results.",
   cvUrl: "/Munyaradzi CV.pdf",
@@ -86,15 +86,12 @@ function About() {
           </div>
 
           <div className="about-content">
-            <p className="eyebrow">ABOUT ME</p>
-            
-            <h2 className="about-heading">
-              {about.heading || "About me"}
-            </h2>
+              <p className="eyebrow">ABOUT ME</p>
 
-            <p className="editorial-intro">
-              {about.heading}
-            </p>
+               <h2 className="about-heading">
+               {about.heading || "Building brands, websites & creative experiences."}
+               </h2>
+
 
             <div className="bio-paragraphs">
               {about.bio1 && (
