@@ -88,19 +88,27 @@
 
 .certificate-strip {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
 
-  margin-top: 48px;
+  /* More space between certificates */
+  gap: 55px;
 
-  padding: 0 40px 40px;
+  margin-top: 56px;
+  padding: 0 40px 50px;
 
   overflow-x: auto;
   overflow-y: visible;
 
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+
+  /* Smooth horizontal scrolling */
+  scroll-behavior: smooth;
+
+  /* Snap each certificate into position */
+  scroll-snap-type: x proximity;
 }
+
+/* Chrome / Edge / Safari */
 
 .certificate-strip::-webkit-scrollbar {
   height: 5px;
@@ -123,16 +131,19 @@
   position: relative;
   flex-shrink: 0;
   margin: 0;
+  scroll-snap-align: start;
 }
 
-/* Main / larger certificate */
+/* Larger cards */
+
 .certificate-large {
-  width: 320px;
+  width: 340px;
 }
 
-/* Secondary / smaller certificate */
+/* Smaller alternating cards */
+
 .certificate-small {
-  width: 260px;
+  width: 280px;
   transform: translateY(32px);
 }
 
@@ -149,15 +160,16 @@
 .certificate-image {
   display: block;
   width: 100%;
-  height: 320px;
+  height: 340px;
   object-fit: cover;
+
   transition:
     transform 0.5s ease,
     opacity 0.5s ease;
 }
 
 .certificate-small .certificate-image {
-  height: 260px;
+  height: 280px;
 }
 
 .certificate-image-wrap:hover .certificate-image {
@@ -182,7 +194,6 @@
 
 .certificate-platform {
   display: block;
-
   margin-bottom: 10px;
 
   font-size: 0.7rem;
@@ -201,11 +212,9 @@
   display: block;
 
   margin: 0 0 8px;
-
   padding: 0;
 
   font-family: Arial, sans-serif;
-
   font-size: 1.05rem !important;
   line-height: 1.35;
   font-weight: 700;
@@ -236,7 +245,6 @@
   align-items: center;
 
   gap: 7px;
-
   margin: 0 0 18px;
 }
 
@@ -247,7 +255,6 @@
   padding: 6px 9px;
 
   background: rgba(255, 255, 255, 0.06);
-
   border-radius: 999px;
 
   font-size: 0.68rem;
@@ -265,33 +272,41 @@
 
 .certificate-actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+
+  /* KEEP BUTTONS SIDE BY SIDE */
+  flex-direction: row;
+
+  align-items: stretch;
 
   gap: 8px;
 
-  margin-top: 2px;
+  margin-top: 22px;
+
+  width: 100%;
 }
 
 .certificate-btn {
   display: inline-flex;
+
   align-items: center;
   justify-content: center;
 
-  min-height: 38px;
+  min-height: 46px;
 
-  padding: 9px 14px;
+  /* Allows both buttons to share the card */
+  flex: 1;
 
-  font-family: Arial, sans-serif;
+  padding: 0 12px;
+
+  white-space: nowrap;
+
+  text-decoration: none;
+
   font-size: 0.68rem;
   font-weight: 700;
 
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-
-  text-decoration: none;
-
-  white-space: nowrap;
+  letter-spacing: 0.01em;
 
   transition: all 0.3s ease;
 }
@@ -315,7 +330,6 @@
 .certificate-btn-secondary {
   background: transparent;
   color: #ffffff;
-
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -330,6 +344,7 @@
 
 .certificate-error {
   margin: 30px 40px;
+
   color: #ed1745;
   font-size: 0.85rem;
 }
@@ -359,24 +374,30 @@
   }
 
   .certificate-strip {
+    gap: 45px;
     padding-left: 24px;
     padding-right: 24px;
   }
 
   .certificate-large {
-    width: 280px;
+    width: 300px;
   }
 
   .certificate-small {
-    width: 230px;
+    width: 250px;
   }
 
   .certificate-image {
-    height: 280px;
+    height: 300px;
   }
 
   .certificate-small .certificate-image {
-    height: 230px;
+    height: 250px;
+  }
+
+  .certificate-btn {
+    font-size: 0.62rem;
+    padding: 0 9px;
   }
 }
 
@@ -404,8 +425,10 @@
 
   .certificate-filters {
     padding: 0 20px;
+
     overflow-x: auto;
     flex-wrap: nowrap;
+
     scrollbar-width: none;
   }
 
@@ -417,41 +440,58 @@
     flex-shrink: 0;
   }
 
+  /* Still horizontally scrollable */
   .certificate-strip {
-    gap: 14px;
+    gap: 32px;
+
     margin-top: 42px;
+
     padding-left: 20px;
     padding-right: 20px;
+
+    overflow-x: auto;
   }
 
   .certificate-large {
-    width: 230px;
+    width: 250px;
   }
 
   .certificate-small {
-    width: 190px;
+    width: 210px;
     transform: translateY(24px);
   }
 
   .certificate-image {
-    height: 230px;
+    height: 250px;
   }
 
   .certificate-small .certificate-image {
-    height: 190px;
+    height: 210px;
   }
 
   .certificate-name {
     font-size: 0.95rem !important;
   }
 
+  /*
+     IMPORTANT:
+     Buttons remain SIDE BY SIDE on mobile.
+  */
+
   .certificate-actions {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
+    flex-direction: row;
+    gap: 7px;
   }
 
   .certificate-btn {
-    width: 100%;
+    width: auto;
+    min-width: 0;
+    flex: 1;
+
+    min-height: 42px;
+
+    padding: 0 7px;
+
+    font-size: 0.58rem;
   }
 }
