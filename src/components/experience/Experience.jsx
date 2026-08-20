@@ -87,7 +87,7 @@ function Experience() {
             <p className="stat-label">Disciplines</p>
           </div>
           <div className="stat-item">
-            <p className="stat-number">06+</p>
+            <p className="stat-number">06</p>
             <p className="stat-label">Core Tools</p>
           </div>
           <div className="stat-item">

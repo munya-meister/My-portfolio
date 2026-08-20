@@ -54,7 +54,7 @@
 }
 
 .experience-title {
-  font-size: clamp(2rem, 15vw, 7rem);
+  font-size: clamp(2rem, 8vw, 4rem);
   line-height: 0.82;
   letter-spacing: -0.05em;
   font-weight: 400;
@@ -152,25 +152,13 @@
 
 .item-title {
   font-family: 'Arial Black', 'Arial', sans-serif;
-  font-size: 2.5rem;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
   font-weight: 400;
   text-transform: uppercase;
   line-height: 1;
   letter-spacing: -0.03em;
   margin: 0 0 20px 0;
   color: #ffffff;
-}
-
-@media (min-width: 768px) {
-  .item-title {
-    font-size: 3rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .item-title {
-    font-size: 3.75rem;
-  }
 }
 
 .item-description {

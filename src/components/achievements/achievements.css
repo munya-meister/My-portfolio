@@ -52,7 +52,7 @@
 }
 
 .section-header h2 {
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
   color: #ffffff;
   margin: 0;
@@ -132,10 +132,11 @@
 
 .carousel-track {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   flex: 1;
   overflow: hidden;
+  align-items: stretch;
+  grid-auto-rows: 1fr;
 }
 
 .carousel-indicators {
@@ -179,6 +180,9 @@
   overflow: hidden;
   transition: all 0.4s ease;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .achievement-card::before {
@@ -197,7 +201,6 @@
   transform: translateY(-8px);
   border-color: rgba(220, 20, 60, 0.3);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(220, 20, 60, 0.15);
-    box-shadow: 0 20px 50px rgba(255, 193, 7, 0.18);
 }
 
 .achievement-image-wrap {
@@ -216,11 +219,12 @@
     flex-direction: column;
     flex: 1;
     padding: 24px;
+    min-height: 0;
 }
 
 .achievement-platform {
     display: inline-block;
-    color: #ffc107;
+    color: #ed1745;
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 2px;
@@ -277,14 +281,17 @@
     font-size: 0.9rem;
     font-weight: 600;
     transition: all 0.3s ease;
+    width: 100%;
 }
 
 .view-btn {
-    background: linear-gradient(135deg, #ffc107, #ffdb58);
-    color: #111;
+    background: #ed1745;
+    color: #ffffff;
+    border: none;
 }
 
 .view-btn:hover {
+    background: #c4123a;
     transform: translateY(-2px);
 }
 
@@ -295,15 +302,14 @@
 }
 
 .verify-btn:hover {
-    border-color: #ffc107;
-    color: #ffc107;
+    border-color: #ed1745;
+    color: #ed1745;
 }
 
 @media (max-width: 1100px) {
     .achievements-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
 }
 
 @media (max-width: 768px) {

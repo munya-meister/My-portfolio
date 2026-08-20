@@ -62,10 +62,28 @@ function Achievements() {
       ? certificates
       : certificates.filter((certificate) => certificate.category === activeFilter);
 
-  const visibleCertificates = filteredCertifications.slice(currentIndex, currentIndex + 3);
+  const [cardsPerView, setCardsPerView] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setCardsPerView(1);
+      } else if (window.innerWidth < 1100) {
+        setCardsPerView(2);
+      } else {
+        setCardsPerView(3);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const visibleCertificates = filteredCertifications.slice(currentIndex, currentIndex + cardsPerView);
 
   const nextSlide = () => {
-    if (currentIndex < filteredCertifications.length - 3) {
+    if (currentIndex < filteredCertifications.length - cardsPerView) {
       setCurrentIndex(currentIndex + 1);
     }
   };
@@ -183,7 +201,7 @@ function Achievements() {
             ←
           </button>
 
-          <div className="carousel-track">
+          <div className="carousel-track" style={{ gridTemplateColumns: `repeat(${cardsPerView}, 1fr)` }}>
             {visibleCertificates.map((certificate, index) => (
               <AchievementCard
                 key={certificate.id || `${currentIndex}-${index}`}
@@ -196,7 +214,7 @@ function Achievements() {
           <button
             className="carousel-nav next"
             onClick={nextSlide}
-            disabled={currentIndex >= filteredCertifications.length - 3}
+            disabled={currentIndex >= filteredCertifications.length - cardsPerView}
             aria-label="Next certificates"
           >
             →

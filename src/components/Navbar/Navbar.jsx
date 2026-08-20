@@ -8,10 +8,6 @@ function Navbar() {
     { href: "#home", label: "Home" },
     { href: "#services", label: "Services" },
     { href: "#about", label: "About" },
-    { href: "#skills", label: "Capabilities" },
-    { href: "#experience", label: "Experience" },
-    { href: "#projects", label: "Projects" },
-    { href: "#certifications", label: "Certificates" },
     { href: "#contact", label: "Contact" },
   ];
 

@@ -2,11 +2,13 @@
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  min-height: calc(100vh - 100px);
+  height: calc(100vh - 100px);
+  min-height: 0;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 0;
+  padding: 24px 0;
 }
 
 .hero-background {
