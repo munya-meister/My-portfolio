@@ -92,159 +92,68 @@
 }
 
 .description-text {
-  max-width: 20rem;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
+  max-width: 25rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.65);
   margin: 24px 0 0 0;
 }
 
-.experience-list {
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+.experience-intro {
+  text-align: center;
+  padding: 48px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 48px;
 }
 
-.experience-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 40px 0;
-  transition: all 0.3s ease;
-}
-
-.experience-item:hover {
-  padding-left: 16px;
-  padding-right: 16px;
-}
-
-@media (min-width: 768px) {
-  .experience-item {
-    padding: 56px 0;
-  }
-}
-
-.experience-item-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 32px;
-}
-
-@media (min-width: 768px) {
-  .experience-item-grid {
-    grid-template-columns: 90px minmax(260px, 0.8fr) 1fr;
-    gap: 40px;
-  }
-}
-
-.item-number {
-  display: flex;
-  align-items: center;
-}
-
-.item-number span {
-  font-family: 'Arial Black', 'Arial', sans-serif;
-  font-size: 0.875rem;
-  letter-spacing: 0.2em;
-  color: #dc143c;
-  font-weight: 400;
-}
-
-.item-content {
-  flex: 1;
-}
-
-.item-title {
-  font-family: 'Arial Black', 'Arial', sans-serif;
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  font-weight: 400;
-  text-transform: uppercase;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  margin: 0 0 20px 0;
-  color: #ffffff;
-}
-
-.item-description {
-  max-width: 20rem;
-  font-size: 0.875rem;
+.intro-text {
+  font-size: 1.25rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
-  margin: 20px 0 0 0;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 32px 0;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.item-skills {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 8px;
-}
-
-@media (min-width: 768px) {
-  .item-skills {
-    justify-content: flex-end;
-  }
-}
-
-.skill-tag {
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 8px 16px;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.7);
-  transition: all 0.3s ease;
-}
-
-.experience-item:hover .skill-tag {
-  border-color: #dc143c;
-  color: #ffffff;
-}
-
-.experience-stats {
-  margin-top: 56px;
+.experience-highlights {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
   padding-top: 32px;
 }
 
-@media (min-width: 768px) {
-  .experience-stats {
-    grid-template-columns: repeat(4, 1fr);
-  }
+.highlight-item {
+  text-align: center;
+  padding: 32px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
-.stat-item:nth-child(3),
-.stat-item:nth-child(4) {
-  margin-top: 32px;
+.highlight-item:hover {
+  border-color: rgba(220, 20, 60, 0.3);
+  background: rgba(220, 20, 60, 0.05);
 }
 
-@media (min-width: 768px) {
-  .stat-item:nth-child(3),
-  .stat-item:nth-child(4) {
-    margin-top: 0;
-  }
-}
-
-.stat-number {
+.highlight-number {
   font-family: 'Arial Black', 'Arial', sans-serif;
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: 400;
-  margin: 0;
-  color: #ffffff;
+  color: #dc143c;
+  margin: 0 0 12px 0;
+  line-height: 1;
 }
 
-@media (min-width: 768px) {
-  .stat-number {
-    font-size: 3rem;
-  }
-}
-
-.stat-label {
-  font-size: 0.6875rem;
-  letter-spacing: 0.18em;
+.highlight-label {
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
   font-weight: 600;
-  margin: 8px 0 0 0;
+  margin: 0;
 }
 
 @media (max-width: 767px) {
@@ -254,19 +163,27 @@
   
   .experience-header {
     gap: 32px;
-    margin-bottom: 60px;
+    margin-bottom: 48px;
   }
   
-  .experience-item:hover {
-    padding-left: 0;
-    padding-right: 0;
+  .experience-intro {
+    padding: 32px 0;
   }
   
-  .item-title {
-    font-size: 2rem;
+  .intro-text {
+    font-size: 1rem;
   }
   
-  .item-skills {
-    justify-content: flex-start;
+  .experience-highlights {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .highlight-number {
+    font-size: 2.5rem;
+  }
+  
+  .highlight-item {
+    padding: 24px 16px;
   }
 }

@@ -8,8 +8,9 @@ function resolveImage(src) {
   return src.startsWith("/uploads/") ? `${API_BASE}${src}` : src;
 }
 
-function ProjectCard({ project }) {
+function ProjectCard({ project, onViewProject }) {
   const imageSrc = resolveImage(project.imageUrl || project.image || project.fileUrl || "");
+  const displayDescription = project.shortDescription || project.description;
 
   return (
     <div className="project-card">
@@ -24,12 +25,16 @@ function ProjectCard({ project }) {
 
       <div className="project-content">
 
+        {project.category && (
+          <span className="project-category">{project.category}</span>
+        )}
+
         <h3 className="project-title">
           {project.title}
         </h3>
 
         <p className="project-description">
-          {project.description}
+          {displayDescription}
         </p>
 
         <div className="project-tech">
@@ -45,25 +50,36 @@ function ProjectCard({ project }) {
 
         <div className="project-links">
 
-          <a
-            href={project.demo}
-            target="_blank"
-            rel="noreferrer"
-            className="project-btn primary-btn"
+          <button
+            onClick={() => onViewProject(project)}
+            className="btn-primary btn-with-icon"
           >
-            <FaExternalLinkAlt />
-            Live Demo
-          </a>
+            View Project →
+          </button>
 
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noreferrer"
-            className="project-btn secondary-btn"
-          >
-            <FaGithub />
-            Source Code
-          </a>
+          {project.demo && project.demo !== "#" && (
+            <a
+              href={project.demo}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-secondary btn-with-icon"
+            >
+              <FaExternalLinkAlt />
+              Live Demo
+            </a>
+          )}
+
+          {project.github && project.github !== "#" && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-secondary btn-with-icon"
+            >
+              <FaGithub />
+              Source Code
+            </a>
+          )}
 
         </div>
 

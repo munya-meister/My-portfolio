@@ -1,47 +1,153 @@
 import pawpure from "../../assets/images/pawpure.jpg";
 import nyaradzo from "../../assets/images/nyaradzo.jpg";
 import grandmeister from "../../assets/images/grandmeister.jpg";
-
+import portfolioWebsite from "../../assets/images/portfolio.png";
 
 const projects = [
   {
+    id: 1,
+    title: "Personal Portfolio Website",
+    image: portfolioWebsite,
+    shortDescription: "Modern responsive portfolio showcasing digital marketing, web development and creative design work.",
+    category: "Web Development",
+    role: "Full Stack Developer & Designer",
+    technologies: ["React", "JavaScript", "HTML", "CSS", "Node.js", "Express"],
+    demo: "#",
+    github: "#",
+    overview: "A comprehensive personal portfolio website designed to showcase professional work across digital marketing, web development, and creative design disciplines.",
+    challenge: "Create a unified digital presence that effectively demonstrates expertise across three different professional disciplines while maintaining a cohesive visual identity.",
+    approach: "Developed a modular React-based architecture with consistent dark theme and red accent colors. Implemented responsive design patterns and smooth animations to enhance user experience.",
+    role: "Handled complete project lifecycle from concept and design to development and deployment. Created all UI components, implemented responsive layouts, and integrated backend functionality.",
+    process: ["Concept & Planning", "UI/UX Design", "Frontend Development", "Backend Integration", "Testing & Optimization", "Deployment"],
+    keyFeatures: ["Responsive design across all devices", "Smooth animations and transitions", "Project showcase with filtering", "Contact form with backend integration", "Certificate verification system", "Admin dashboard for content management"],
+    outcome: "Successfully created a professional digital presence that effectively communicates multidisciplinary expertise and provides a platform for showcasing ongoing work and achievements."
+  },
+  {
+    id: 2,
     title: "PawPure Nutrition",
     image: pawpure,
-    description: "Brand identity, social media content and website design.",
-    technologies: [
-      "React",
-      "Canva",
-      "Branding",
-      "Marketing"
-    ],
+    shortDescription: "Brand identity, social media content and website design for a pet nutrition company.",
+    category: "Creative Design",
+    role: "Brand Designer & Digital Marketer",
+    technologies: ["React", "Canva", "Branding", "Marketing", "Social Media"],
     demo: "#",
-    github: "#"
+    github: "#",
+    overview: "Complete brand identity and digital presence development for PawPure Nutrition, a pet nutrition company focused on natural pet products.",
+    challenge: "Establish a new brand in a competitive market while creating trust and recognition among pet owners seeking natural nutrition solutions.",
+    approach: "Developed a warm, trustworthy brand identity with nature-inspired color palette. Created comprehensive social media content strategy and designed responsive web presence.",
+    role: "Led brand identity development, created visual assets, developed social media content strategy, and designed digital marketing materials.",
+    process: ["Brand Research", "Identity Design", "Content Strategy", "Social Media Setup", "Website Design", "Launch & Marketing"],
+    keyFeatures: ["Complete brand identity system", "Social media content templates", "Responsive website design", "Marketing collateral", "Brand guidelines documentation"],
+    outcome: "Successfully launched PawPure Nutrition with a cohesive brand identity that resonates with target audience and supports ongoing marketing efforts."
   },
-
   {
+    id: 3,
     title: "Nyaradzo Campaign",
     image: nyaradzo,
-    description: "Educational digital marketing campaign.",
-    technologies: [
-      "Google Ads",
-      "SEO",
-      "Canva"
-    ],
+    shortDescription: "Educational digital marketing campaign focused on financial literacy and insurance awareness.",
+    category: "Digital Marketing",
+    role: "Digital Marketing Strategist",
+    technologies: ["Google Ads", "SEO", "Content Strategy", "Analytics", "Canva"],
     demo: "#",
-    github: "#"
+    github: "#",
+    overview: "Educational digital marketing campaign designed to increase financial literacy and insurance awareness among target demographics.",
+    challenge: "Create engaging educational content about complex financial topics while driving meaningful engagement and brand awareness.",
+    approach: "Developed content strategy focusing on simplified financial education, implemented targeted advertising campaigns, and created visual assets that made complex topics accessible.",
+    role: "Designed campaign strategy, created educational content, managed advertising campaigns, and analyzed performance metrics for optimization.",
+    process: ["Market Research", "Content Strategy Development", "Creative Asset Production", "Campaign Setup", "Performance Monitoring", "Optimization"],
+    keyFeatures: ["Educational content series", "Targeted advertising campaigns", "Performance tracking and analytics", "Visual content creation", "Multi-platform distribution"],
+    outcome: "Successfully increased engagement with educational content and improved awareness of financial literacy topics among target audiences."
   },
-
   {
+    id: 4,
     title: "Grandmeister Music",
     image: grandmeister,
-    description: "Music brand identity and digital promotion.",
-    technologies: [
-      "Branding",
-      "Photoshop",
-      "FL Studio"
-    ],
+    shortDescription: "Music brand identity and digital promotion for an emerging music artist.",
+    category: "Creative Design",
+    role: "Brand Designer & Digital Promoter",
+    technologies: ["Branding", "Photoshop", "Digital Marketing", "Social Media", "Content Creation"],
     demo: "#",
-    github: "#"
+    github: "#",
+    overview: "Complete brand identity and digital promotion strategy for Grandmeister, an emerging music artist seeking to establish a strong digital presence.",
+    challenge: "Create a distinctive brand identity for a new artist while developing effective digital promotion strategies to build audience and engagement.",
+    approach: "Developed bold, memorable visual identity reflecting the artist's musical style. Created comprehensive digital promotion strategy across social platforms and music streaming services.",
+    role: "Led brand identity development, created visual assets and promotional materials, developed social media strategy, and managed digital promotion campaigns.",
+    process: ["Artist Brand Development", "Visual Identity Design", "Social Media Strategy", "Content Creation", "Digital Promotion", "Audience Building"],
+    keyFeatures: ["Complete brand identity system", "Social media visual assets", "Promotional materials", "Digital promotion strategy", "Audience engagement campaigns"],
+    outcome: "Successfully established Grandmeister's brand identity with consistent visual presence across digital platforms, supporting audience growth and engagement."
+  },
+  {
+    id: 5,
+    title: "SEO + AEO Project",
+    image: "https://via.placeholder.com/400x300/1a1a1a/dc143c?text=SEO+AEO",
+    shortDescription: "Search engine optimization and answer engine optimization project for improved digital visibility.",
+    category: "Digital Marketing",
+    role: "SEO Specialist",
+    technologies: ["SEO", "AEO", "Content Strategy", "Analytics", "Keyword Research"],
+    demo: "#",
+    github: "#",
+    overview: "Comprehensive SEO and AEO (Answer Engine Optimization) project focused on improving organic search visibility and answer engine presence.",
+    challenge: "Improve search engine rankings and visibility in answer engines while adapting to evolving search algorithms and user behavior patterns.",
+    approach: "Implemented technical SEO optimizations, developed content strategy targeting featured snippets and answer boxes, and continuously monitored performance metrics.",
+    role: "Conducted SEO audits, implemented technical optimizations, developed content strategy, and monitored search performance for continuous improvement.",
+    process: ["SEO Audit", "Keyword Research", "Technical Optimization", "Content Strategy", "AEO Implementation", "Performance Monitoring"],
+    keyFeatures: ["Technical SEO improvements", "Content optimization for answer engines", "Performance tracking and reporting", "Competitor analysis", "Continuous optimization"],
+    outcome: "Achieved improved search engine rankings and increased visibility in answer engine results, demonstrating effective SEO and AEO strategies."
+  },
+  {
+    id: 6,
+    title: "Landing Page & Lead Magnet",
+    image: "https://via.placeholder.com/400x300/1a1a1a/dc143c?text=Landing+Page",
+    shortDescription: "High-converting landing page with lead magnet for digital marketing campaign.",
+    category: "Digital Marketing",
+    role: "Digital Marketer & Web Developer",
+    technologies: ["React", "HTML", "CSS", "Marketing Automation", "Analytics"],
+    demo: "#",
+    github: "#",
+    overview: "High-converting landing page with integrated lead magnet designed to capture leads and support digital marketing campaign objectives.",
+    challenge: "Create a landing page that effectively converts visitors while seamlessly integrating with marketing automation and lead capture systems.",
+    approach: "Designed conversion-focused landing page with clear value proposition, implemented lead capture forms with marketing automation integration, and optimized for conversion rate.",
+    role: "Designed landing page UI, developed frontend functionality, integrated marketing automation systems, and optimized conversion funnels.",
+    process: ["Conversion Strategy", "UI/UX Design", "Frontend Development", "Marketing Integration", "A/B Testing", "Launch & Optimization"],
+    keyFeatures: ["Conversion-focused design", "Lead capture forms", "Marketing automation integration", "A/B testing capabilities", "Performance analytics"],
+    outcome: "Successfully created high-converting landing page that effectively captured leads and supported overall digital marketing campaign objectives."
+  },
+  {
+    id: 7,
+    title: "MusicoNet",
+    image: "https://via.placeholder.com/400x300/1a1a1a/dc143c?text=MusicoNet",
+    shortDescription: "Music streaming platform concept with user-focused design and functionality.",
+    category: "Web Development",
+    role: "UX/UI Designer & Developer",
+    technologies: ["React", "UX/UI Design", "Figma", "JavaScript", "API Integration"],
+    demo: "#",
+    github: "#",
+    overview: "Music streaming platform concept focused on user experience and interface design, featuring intuitive navigation and personalized music discovery.",
+    challenge: "Design a music streaming platform that stands out in a crowded market through superior user experience and innovative interface design.",
+    approach: "Conducted user research to identify pain points with existing platforms, designed intuitive interface with personalized features, and developed functional prototypes.",
+    role: "Led UX research, designed interface and user flows, created interactive prototypes, and developed frontend components.",
+    process: ["User Research", "Information Architecture", "UI/UX Design", "Prototyping", "Frontend Development", "User Testing"],
+    keyFeatures: ["Intuitive user interface", "Personalized music discovery", "Smooth user flows", "Responsive design", "Interactive prototypes"],
+    outcome: "Created a comprehensive music streaming platform concept with user-centered design that demonstrated innovative approaches to music discovery and user engagement."
+  },
+  {
+    id: 8,
+    title: "Videl – Video Eloquence",
+    image: "https://via.placeholder.com/400x300/1a1a1a/dc143c?text=Videl",
+    shortDescription: "Video content platform focused on eloquent communication and storytelling.",
+    category: "Web Development",
+    role: "Full Stack Developer",
+    technologies: ["React", "Node.js", "Video Processing", "UX/UI Design", "Database"],
+    demo: "#",
+    github: "#",
+    overview: "Video content platform designed to focus on eloquent communication and storytelling, providing tools for creating and sharing meaningful video content.",
+    challenge: "Build a video platform that emphasizes quality communication and storytelling while providing intuitive tools for content creation and sharing.",
+    approach: "Developed platform architecture with focus on user experience, implemented video processing capabilities, and created intuitive content management tools.",
+    role: "Architected platform infrastructure, developed video processing systems, designed user interfaces, and implemented content management features.",
+    process: ["Platform Architecture", "Database Design", "Video Processing Implementation", "UI/UX Design", "Frontend Development", "Testing & Deployment"],
+    keyFeatures: ["Video upload and processing", "Content management tools", "User-friendly interface", "Responsive design", "Content sharing capabilities"],
+    outcome: "Successfully developed a functional video platform prototype with focus on user experience and content quality, demonstrating full-stack development capabilities."
   }
 ];
+
 export default projects;

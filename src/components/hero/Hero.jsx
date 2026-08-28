@@ -5,7 +5,7 @@ import { downloadPublicFile } from "../../utils/downloadFile";
 
 const defaultAbout = {
   profilePic: "",
-  availability: "Available for new opportunities",
+  availability: "",
   cvUrl: "/Munyaradzi CV.pdf",
 };
 

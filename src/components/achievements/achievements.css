@@ -285,59 +285,6 @@
   width: 100%;
 }
 
-.certificate-btn {
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  min-height: 46px;
-
-  /* Allows both buttons to share the card */
-  flex: 1;
-
-  padding: 0 12px;
-
-  white-space: nowrap;
-
-  text-decoration: none;
-
-  font-size: 0.68rem;
-  font-weight: 700;
-
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-
-  transition: all 0.3s ease;
-}
-
-/* View Certificate */
-
-.certificate-btn-primary {
-  background: #ed1745;
-  color: #ffffff;
-  border: 1px solid #ed1745;
-}
-
-.certificate-btn-primary:hover {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #000000;
-}
-
-/* Verify Credential */
-
-.certificate-btn-secondary {
-  background: transparent;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.certificate-btn-secondary:hover {
-  border-color: #ed1745;
-  color: #ed1745;
-}
-
 /* ==============================
    ERROR
 ================================ */
@@ -393,11 +340,6 @@
 
   .certificate-small .certificate-image {
     height: 250px;
-  }
-
-  .certificate-btn {
-    font-size: 0.62rem;
-    padding: 0 9px;
   }
 }
 
@@ -481,17 +423,5 @@
   .certificate-actions {
     flex-direction: row;
     gap: 7px;
-  }
-
-  .certificate-btn {
-    width: auto;
-    min-width: 0;
-    flex: 1;
-
-    min-height: 42px;
-
-    padding: 0 7px;
-
-    font-size: 0.58rem;
   }
 }

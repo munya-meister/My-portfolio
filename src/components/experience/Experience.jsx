@@ -1,29 +1,5 @@
 import "./Experience.css";
 
-const rows = [
-  {
-    years: "01",
-    title: "Digital Marketing",
-    description:
-      "Building digital growth strategies that connect brands with the right audiences.",
-    tags: ["SEO", "AEO", "Social Media", "Content Strategy", "Analytics"],
-  },
-  {
-    years: "02",
-    title: "Creative Design",
-    description:
-      "Creating visual identities, interfaces and marketing creatives that communicate clearly.",
-    tags: ["UI/UX", "Figma", "Canva", "Graphic Design"],
-  },
-  {
-    years: "03",
-    title: "Web Development",
-    description:
-      "Designing and developing responsive digital experiences from interface to deployment.",
-    tags: ["React", "JavaScript", "Python", "Django", "HTML/CSS", "Git/GitHub"],
-  },
-];
-
 function Experience() {
   return (
     <section className="experience" id="experience">
@@ -33,66 +9,49 @@ function Experience() {
       <div className="experience-container">
         <div className="experience-header">
           <div className="header-main">
-            <p className="eyebrow">CAPABILITIES</p>
+            <p className="eyebrow">PROOF OF WORK</p>
             <h2 className="experience-title">
               EXPERIENCE
               <br />
-              &amp; SKILLS
+              &amp; PROJECTS
             </h2>
           </div>
           <div className="header-description">
             <p className="editorial-text">
-              Three disciplines. One approach:
+              Real projects. Real results.
               <br />
-              build work that performs.
+              Real impact.
             </p>
             <p className="description-text">
-              I work across marketing, design and development, bringing
-              strategy and execution together to create useful digital
-              experiences.
+              I don't just list skills — I use them to build actual solutions. 
+              From digital marketing campaigns and web applications to brand identities 
+              and user experiences, every project demonstrates practical application 
+              of marketing, development, and design expertise.
             </p>
           </div>
         </div>
 
-        <div className="experience-list">
-          {rows.map((row) => (
-            <article key={row.title} className="experience-item">
-              <div className="experience-item-grid">
-                <div className="item-number">
-                  <span>{row.years}</span>
-                </div>
-                <div className="item-content">
-                  <h3 className="item-title">{row.title}</h3>
-                  <p className="item-description">{row.description}</p>
-                </div>
-                <div className="item-skills">
-                  {row.tags.map((tag) => (
-                    <span key={tag} className="skill-tag">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </article>
-          ))}
+        <div className="experience-intro">
+          <p className="intro-text">
+            The skills section shows what I know. The projects below show what I've built with that knowledge.
+          </p>
+          <a href="#projects" className="btn-primary">
+            View All Projects →
+          </a>
         </div>
 
-        <div className="experience-stats">
-          <div className="stat-item">
-            <p className="stat-number">08</p>
-            <p className="stat-label">Projects</p>
+        <div className="experience-highlights">
+          <div className="highlight-item">
+            <div className="highlight-number">08+</div>
+            <div className="highlight-label">Completed Projects</div>
           </div>
-          <div className="stat-item">
-            <p className="stat-number">03</p>
-            <p className="stat-label">Disciplines</p>
+          <div className="highlight-item">
+            <div className="highlight-number">03</div>
+            <div className="highlight-label">Core Disciplines</div>
           </div>
-          <div className="stat-item">
-            <p className="stat-number">06</p>
-            <p className="stat-label">Core Tools</p>
-          </div>
-          <div className="stat-item">
-            <p className="stat-number">01</p>
-            <p className="stat-label">Creative Direction</p>
+          <div className="highlight-item">
+            <div className="highlight-number">100%</div>
+            <div className="highlight-label">Real Work</div>
           </div>
         </div>
       </div>

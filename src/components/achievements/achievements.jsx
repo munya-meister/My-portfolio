@@ -1,12 +1,21 @@
 import "./achievements.css";
 import initialCertifications from "./certificationsData";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchCertificates } from "../../api";
 
 function Achievements() {
   const [certificates, setCertificates] = useState(initialCertifications);
   const [activeFilter, setActiveFilter] = useState("All");
   const [error, setError] = useState("");
+
+  const stripRef = useRef(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  /* ==============================
+     LOAD CERTIFICATES
+  ============================== */
 
   useEffect(() => {
     let active = true;
@@ -19,11 +28,13 @@ function Achievements() {
           setCertificates(
             data.map((certificate) => ({
               ...certificate,
+
               image:
                 certificate.imageUrl ||
                 certificate.fileUrl ||
                 certificate.image ||
                 "",
+
               skills: Array.isArray(certificate.skills)
                 ? certificate.skills
                 : typeof certificate.skills === "string"
@@ -45,6 +56,10 @@ function Achievements() {
     };
   }, []);
 
+  /* ==============================
+     FILTERS
+  ============================== */
+
   const categories = [
     "All",
     ...new Set(
@@ -61,11 +76,100 @@ function Achievements() {
           (certificate) => certificate.category === activeFilter
         );
 
+  /* ==============================
+     RESET SCROLL WHEN FILTER CHANGES
+  ============================== */
+
+  useEffect(() => {
+    if (stripRef.current) {
+      stripRef.current.scrollTo({
+        left: 0,
+        behavior: "smooth",
+      });
+    }
+  }, [activeFilter]);
+
+  /* ==============================
+     MOUSE DRAG SCROLL
+  ============================== */
+
+  const handleMouseDown = (event) => {
+    if (!stripRef.current) return;
+
+    isDragging.current = true;
+    startX.current = event.pageX - stripRef.current.offsetLeft;
+    scrollLeft.current = stripRef.current.scrollLeft;
+
+    stripRef.current.classList.add("is-dragging");
+  };
+
+  const handleMouseMove = (event) => {
+    if (!isDragging.current || !stripRef.current) return;
+
+    event.preventDefault();
+
+    const x = event.pageX - stripRef.current.offsetLeft;
+    const distance = x - startX.current;
+
+    stripRef.current.scrollLeft =
+      scrollLeft.current - distance * 1.2;
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+
+    if (stripRef.current) {
+      stripRef.current.classList.remove("is-dragging");
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isDragging.current) return;
+
+    isDragging.current = false;
+
+    if (stripRef.current) {
+      stripRef.current.classList.remove("is-dragging");
+    }
+  };
+
+  /* ==============================
+     TOUCH SUPPORT
+  ============================== */
+
+  const handleTouchStart = (event) => {
+    if (!stripRef.current) return;
+
+    startX.current =
+      event.touches[0].pageX - stripRef.current.offsetLeft;
+
+    scrollLeft.current = stripRef.current.scrollLeft;
+  };
+
+  const handleTouchMove = (event) => {
+    if (!stripRef.current) return;
+
+    const x =
+      event.touches[0].pageX - stripRef.current.offsetLeft;
+
+    const distance = x - startX.current;
+
+    stripRef.current.scrollLeft =
+      scrollLeft.current - distance;
+  };
+
+  /* ==============================
+     RENDER
+  ============================== */
+
   return (
     <section className="achievements" id="certifications">
       <div className="achievements-container">
 
-        {/* HEADER */}
+        {/* ==========================
+            HEADER
+        ========================== */}
+
         <div className="achievements-header">
           <h2 className="achievements-title">
             Certificates
@@ -77,12 +181,16 @@ function Achievements() {
           </p>
         </div>
 
-        {/* FILTERS */}
+        {/* ==========================
+            FILTERS
+        ========================== */}
+
         {categories.length > 1 && (
           <div className="certificate-filters">
             {categories.map((category) => (
               <button
                 key={category}
+                type="button"
                 className={`certificate-filter ${
                   activeFilter === category ? "active" : ""
                 }`}
@@ -94,14 +202,30 @@ function Achievements() {
           </div>
         )}
 
+        {/* ==========================
+            ERROR
+        ========================== */}
+
         {error && (
           <p className="certificate-error">
             {error}
           </p>
         )}
 
-        {/* CERTIFICATE STRIP */}
-        <div className="certificate-strip">
+        {/* ==========================
+            CERTIFICATE STRIP
+        ========================== */}
+
+        <div
+          ref={stripRef}
+          className="certificate-strip"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+        >
           {filteredCertificates.map((certificate, index) => (
             <figure
               key={certificate.id || index}
@@ -111,19 +235,30 @@ function Achievements() {
                   : "certificate-small"
               }`}
             >
-              {/* IMAGE */}
+
+              {/* ==========================
+                  IMAGE
+              ========================== */}
+
               <div className="certificate-image-wrap">
                 {certificate.url ? (
                   <a
                     href={certificate.url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    draggable="false"
                     aria-label={`View ${certificate.title} certificate`}
+                    onClick={(event) => {
+                      if (isDragging.current) {
+                        event.preventDefault();
+                      }
+                    }}
                   >
                     <img
                       src={certificate.image}
                       alt={`${certificate.platform || "Certificate"} certificate: ${certificate.title}`}
                       loading="lazy"
+                      draggable="false"
                       className="certificate-image"
                     />
                   </a>
@@ -132,59 +267,82 @@ function Achievements() {
                     src={certificate.image}
                     alt={`${certificate.platform || "Certificate"} certificate: ${certificate.title}`}
                     loading="lazy"
+                    draggable="false"
                     className="certificate-image"
                   />
                 )}
               </div>
 
-              {/* INFORMATION */}
-              <figcaption>
-                <span className="certificate-platform">
-                  {certificate.platform}
-                </span>
+              {/* ==========================
+                  INFORMATION
+              ========================== */}
 
+              <figcaption>
+
+                {/* Platform */}
+                {certificate.platform && (
+                  <span className="certificate-platform">
+                    {certificate.platform}
+                  </span>
+                )}
+
+                {/* Title */}
                 <h3 className="certificate-name">
                   {certificate.title}
                 </h3>
 
+                {/* Date */}
                 {certificate.date && (
                   <span className="certificate-date">
                     {certificate.date}
                   </span>
                 )}
 
-                {/* SKILLS */}
+                {/* Skills */}
                 {certificate.skills?.length > 0 && (
                   <div className="certificate-skills">
-                    {certificate.skills.map((skill, skillIndex) => (
-                      <span key={skillIndex}>
-                        {skill}
-                      </span>
-                    ))}
+                    {certificate.skills.map(
+                      (skill, skillIndex) => (
+                        <span key={skillIndex}>
+                          {skill}
+                        </span>
+                      )
+                    )}
                   </div>
                 )}
 
-                {/* BUTTONS */}
-                {(certificate.url || certificate.verifyUrl) && (
-                  <div className="certificate-actions">
+                {/* ==========================
+                    BUTTONS
+                ========================== */}
 
+                {(certificate.url ||
+                  certificate.verifyUrl) && (
+                  <div
+                    className="certificate-actions"
+                    onMouseDown={(event) =>
+                      event.stopPropagation()
+                    }
+                  >
+
+                    {/* View Certificate */}
                     {certificate.url && (
                       <a
                         href={certificate.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="certificate-btn certificate-btn-primary"
+                        className="btn-primary btn-compact"
                       >
                         View Certificate →
                       </a>
                     )}
 
+                    {/* Verify Credential */}
                     {certificate.verifyUrl && (
                       <a
                         href={certificate.verifyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="certificate-btn certificate-btn-secondary"
+                        className="btn-secondary btn-compact"
                       >
                         Verify Credential
                       </a>
@@ -192,9 +350,17 @@ function Achievements() {
 
                   </div>
                 )}
+
               </figcaption>
             </figure>
           ))}
+
+          {/* Empty state */}
+          {filteredCertificates.length === 0 && (
+            <div className="certificate-empty">
+              No certificates found in this category.
+            </div>
+          )}
         </div>
 
       </div>

@@ -2,6 +2,7 @@ import "./projects.css";
 import { useEffect, useState } from "react";
 import initialProjects from "./ProjectsData";
 import ProjectCard from "./projectCard";
+import ProjectModal from "./ProjectModal";
 import { fetchProjects, createProject } from "../../api";
 
 function Projects() {
@@ -9,6 +10,7 @@ function Projects() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showForm, setShowForm] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -46,7 +48,7 @@ function Projects() {
     };
   }, []);
 
-  const categories = ["All", "Digital Marketing", "Web Development", "Creative Design"];
+  const categories = ["All", "Digital Marketing", "Web Development", "UX/UI", "Creative Design"];
 
   const filteredProjects =
     activeFilter === "All"
@@ -65,6 +67,14 @@ function Projects() {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     }
+  };
+
+  const handleViewProject = (project) => {
+    setSelectedProject(project);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProject(null);
   };
 
   const handleChange = (event) => {
@@ -158,6 +168,7 @@ function Projects() {
               <ProjectCard
                 key={project.id || `${currentIndex}-${index}`}
                 project={project}
+                onViewProject={handleViewProject}
               />
             ))}
           </div>
@@ -183,6 +194,13 @@ function Projects() {
           ))}
         </div>
       </div>
+
+      {selectedProject && (
+        <ProjectModal
+          project={selectedProject}
+          onClose={handleCloseModal}
+        />
+      )}
     </section>
   );
 }

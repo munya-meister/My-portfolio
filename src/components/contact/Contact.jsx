@@ -158,14 +158,14 @@ ${message}`
       
       <div className="contact-container">
         <div className="contact-header">
-          <p className="header-tag">LET'S WORK TOGETHER</p>
+          <p className="header-tag">LET'S BUILD SOMETHING USEFUL</p>
           <div className="header-title">
-            <h2>START A</h2>
-            <h2 className="title-white">PROJECT</h2>
+            <h2>GET IN</h2>
+            <h2 className="title-white">TOUCH</h2>
           </div>
           <div className="header-content">
             <p className="editorial-text">
-              Tell me what you're building and I'll come back with a plan.
+              Have a project, opportunity or idea you'd like to discuss?
             </p>
             <div className="header-location">
               <p>Harare</p>
@@ -309,10 +309,11 @@ ${message}`
 
             {mailtoUrl ? (
               <a
-                className="secondary-btn full-width"
+                className="btn-primary"
                 href={mailtoUrl}
                 target="_blank"
                 rel="noreferrer"
+                style={{ width: '100%', marginTop: '6px' }}
               >
                 Send via email client
               </a>
@@ -321,7 +322,7 @@ ${message}`
             <div className="form-submit">
               <button
                 type="submit"
-                className="submit-btn"
+                className="btn-primary btn-with-icon"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Sending..." : "Send message"}

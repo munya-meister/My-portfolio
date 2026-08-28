@@ -107,7 +107,7 @@ function About() {
                 <a
                   href={about.cvUrl}
                   download
-                  className="primary-btn"
+                  className="btn-primary"
                   onClick={handleDownloadCv}
                 >
                   Download CV

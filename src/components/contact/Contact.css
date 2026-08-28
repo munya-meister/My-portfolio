@@ -332,30 +332,9 @@
   color: #ffcdd2;
 }
 
-.secondary-btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  padding: 13px 24px;
-  border-radius: 50px;
-  font-weight: 700;
-  transition: 0.3s ease;
-  background: transparent;
-  color: #fff;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  text-decoration: none;
-}
 
-.secondary-btn:hover {
-  border-color: #dc143c;
-  color: #dc143c;
-  background: rgba(220, 20, 60, 0.1);
-}
 
-.full-width {
-  width: 100%;
-  margin-top: 6px;
-}
+
 
 .form-submit {
   margin-top: 48px;
@@ -371,48 +350,23 @@
   }
 }
 
-.submit-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  background: #ed1745;
-  color: #ffffff;
-  padding: 16px 32px;
-  border-radius: 0;
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
 
-.submit-btn:hover:not(:disabled) {
-  background: #ffffff;
-  color: #000000;
-}
-
-.submit-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.submit-btn span {
-  font-size: 1.125rem;
-  transition: transform 0.3s ease;
-}
-
-.submit-btn:hover span {
-  transform: translateX(4px);
-}
 
 .submit-note {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   color: rgba(255, 255, 255, 0.3);
+}
+
+/* Button icon animation */
+.btn-with-icon span {
+  font-size: 1.125rem;
+  transition: transform 0.3s ease;
+}
+
+.btn-with-icon:hover span {
+  transform: translateX(4px);
 }
 
 .contact-footer {

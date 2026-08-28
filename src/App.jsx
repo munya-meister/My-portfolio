@@ -1,9 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Hero from "./components/hero/Hero";
-import Disciplines from "./components/disciplines/Disciplines";
 import About from "./components/about/about";
 import Skills from "./components/Skills/Skills";
+import Transition from "./components/transition/Transition";
 import Experience from "./components/experience/Experience";
 import Projects from "./components/projects/projects";
 import Achievements from "./components/achievements/achievements";
@@ -20,9 +20,9 @@ function App() {
           <>
             <Navbar />
             <Hero />
-            <Disciplines />
             <About />
             <Skills />
+            <Transition />
             <Experience />
             <Projects />
             <Achievements />
