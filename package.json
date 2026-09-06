@@ -8,9 +8,11 @@
     "build": "vite build",
     "start": "node server.js",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "migrate": "node scripts/migrate-to-supabase.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.115.0",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^4.22.2",

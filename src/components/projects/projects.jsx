@@ -30,13 +30,18 @@ function Projects() {
           setProjects(
             data.map((item) => ({
               ...item,
+              id: item.id || item._id,
               image: item.imageUrl || item.fileUrl || item.image || "",
+              category: item.category || "Web Development",
               technologies: Array.isArray(item.technologies)
                 ? item.technologies
                 : typeof item.technologies === "string"
-                ? item.technologies.split(",").map((tech) => tech.trim()).filter(Boolean)
-                : [],
-            }))
+                  ? item.technologies
+                      .split(",")
+                      .map((tech) => tech.trim())
+                      .filter(Boolean)
+                  : [],
+            })),
           );
         }
       })
@@ -48,14 +53,23 @@ function Projects() {
     };
   }, []);
 
-  const categories = ["All", "Digital Marketing", "Web Development", "UX/UI", "Creative Design"];
+  const categories = [
+    "All",
+    "Digital Marketing",
+    "Web Development",
+    "UX/UI",
+    "Creative Design",
+  ];
 
   const filteredProjects =
     activeFilter === "All"
       ? projects
       : projects.filter((project) => project.category === activeFilter);
 
-  const visibleProjects = filteredProjects.slice(currentIndex, currentIndex + 3);
+  const visibleProjects = filteredProjects.slice(
+    currentIndex,
+    currentIndex + 3,
+  );
 
   const nextSlide = () => {
     if (currentIndex < filteredProjects.length - 3) {
@@ -109,8 +123,11 @@ function Projects() {
           technologies: Array.isArray(created.technologies)
             ? created.technologies
             : typeof created.technologies === "string"
-            ? created.technologies.split(",").map((tech) => tech.trim()).filter(Boolean)
-            : [],
+              ? created.technologies
+                  .split(",")
+                  .map((tech) => tech.trim())
+                  .filter(Boolean)
+              : [],
         },
         ...current,
       ]);
@@ -196,10 +213,7 @@ function Projects() {
       </div>
 
       {selectedProject && (
-        <ProjectModal
-          project={selectedProject}
-          onClose={handleCloseModal}
-        />
+        <ProjectModal project={selectedProject} onClose={handleCloseModal} />
       )}
     </section>
   );

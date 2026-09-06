@@ -39,21 +39,6 @@ function Experience() {
             View All Projects →
           </a>
         </div>
-
-        <div className="experience-highlights">
-          <div className="highlight-item">
-            <div className="highlight-number">08+</div>
-            <div className="highlight-label">Completed Projects</div>
-          </div>
-          <div className="highlight-item">
-            <div className="highlight-number">03</div>
-            <div className="highlight-label">Core Disciplines</div>
-          </div>
-          <div className="highlight-item">
-            <div className="highlight-number">100%</div>
-            <div className="highlight-label">Real Work</div>
-          </div>
-        </div>
       </div>
     </section>
   );

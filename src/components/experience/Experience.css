@@ -54,10 +54,10 @@
 }
 
 .experience-title {
-  font-size: clamp(2rem, 8vw, 4rem);
-  line-height: 0.82;
-  letter-spacing: -0.05em;
-  font-weight: 400;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  font-weight: 900;
   text-transform: uppercase;
   margin: 0;
   color: #ffffff;
@@ -117,45 +117,6 @@
   margin-right: auto;
 }
 
-.experience-highlights {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-  padding-top: 32px;
-}
-
-.highlight-item {
-  text-align: center;
-  padding: 32px 20px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.highlight-item:hover {
-  border-color: rgba(220, 20, 60, 0.3);
-  background: rgba(220, 20, 60, 0.05);
-}
-
-.highlight-number {
-  font-family: 'Arial Black', 'Arial', sans-serif;
-  font-size: 3rem;
-  font-weight: 400;
-  color: #dc143c;
-  margin: 0 0 12px 0;
-  line-height: 1;
-}
-
-.highlight-label {
-  font-size: 0.875rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
-  font-weight: 600;
-  margin: 0;
-}
-
 @media (max-width: 767px) {
   .experience {
     padding: 60px 0;
@@ -163,27 +124,14 @@
   
   .experience-header {
     gap: 32px;
-    margin-bottom: 48px;
+    margin-bottom: 32px;
   }
   
   .experience-intro {
-    padding: 32px 0;
+    padding: 24px 0;
   }
   
   .intro-text {
     font-size: 1rem;
-  }
-  
-  .experience-highlights {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  
-  .highlight-number {
-    font-size: 2.5rem;
-  }
-  
-  .highlight-item {
-    padding: 24px 16px;
   }
 }

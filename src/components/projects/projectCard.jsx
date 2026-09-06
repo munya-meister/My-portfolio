@@ -5,7 +5,17 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
 function resolveImage(src) {
   if (!src) return "";
-  return src.startsWith("/uploads/") ? `${API_BASE}${src}` : src;
+  if (src.startsWith("/uploads/")) {
+    return `${API_BASE}${src}`;
+  }
+  if (src.startsWith("http")) {
+    return src;
+  }
+  if (src.startsWith("/images/")) {
+    return src;
+  }
+  // Handle local file uploads and other paths
+  return src;
 }
 
 function ProjectCard({ project, onViewProject }) {

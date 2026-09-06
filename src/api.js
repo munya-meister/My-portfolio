@@ -1,15 +1,17 @@
-console.log(import.meta.env.VITE_API_BASE_URL);
-const DEFAULT_BASE_URL = "";
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || DEFAULT_BASE_URL).replace(/\/$/, "");
-
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 
 function buildUrl(path) {
-  if (/^https?:\/\//i.test(path)) {
-    return path;
+  // Use same-origin API requests in production
+  // Use local development API when specified
+  const devApiUrl = import.meta.env.VITE_API_BASE_URL;
+  
+  if (devApiUrl && devApiUrl.startsWith('http')) {
+    const baseUrl = devApiUrl.replace(/\/$/, "");
+    return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
   }
-
-  return `${BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  
+  // Production: use same-origin
+  return path;
 }
 
 async function request(path, options = {}) {

@@ -2,8 +2,25 @@ import "./projects.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaExternalLinkAlt, FaGithub, FaTimes } from "react-icons/fa";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+
+function resolveImage(src) {
+  if (!src) return "";
+  if (src.startsWith("/uploads/")) {
+    return `${API_BASE}${src}`;
+  }
+  if (src.startsWith("http")) {
+    return src;
+  }
+  if (src.startsWith("/images/")) {
+    return src;
+  }
+  return src;
+}
+
 function ProjectModal({ project, onClose }) {
   if (!project) return null;
+  const imageSrc = resolveImage(project.imageUrl || project.image || project.fileUrl || "");
 
   return (
     <AnimatePresence>
@@ -27,7 +44,7 @@ function ProjectModal({ project, onClose }) {
 
           <div className="modal-header">
             <div className="modal-image-wrapper">
-              <img src={project.image} alt={project.title} className="modal-image" />
+              <img src={imageSrc} alt={project.title} className="modal-image" />
             </div>
             <div className="modal-title-section">
               <span className="modal-category">{project.category}</span>

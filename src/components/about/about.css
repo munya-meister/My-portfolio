@@ -3,7 +3,7 @@
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: #000000;
-  padding: 45px 0;
+  padding: 80px 0;
 }
 
 .about-background {
@@ -139,12 +139,12 @@
 }
 
 .about-heading {
-  font-size: clamp(1.4rem, 4.5vw, 2.3rem);
-  line-height: 1.05;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.1;
   margin: 20px 0;
-  font-weight: 300;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
   color: #ffffff;
   font-family: 'Arial Black', 'Arial', sans-serif;
 }
@@ -179,26 +179,6 @@
   gap: 16px;
 }
 
-.primary-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #dc143c;
-  color: #ffffff;
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.primary-btn:hover {
-  background: #f0445f;
-}
-
 .availability-text {
   font-size: 0.875rem;
   text-transform: uppercase;
@@ -231,7 +211,6 @@
   .about-content {
     padding: 40px 20px;
   }
-  
   
   .about-actions {
     flex-direction: column;

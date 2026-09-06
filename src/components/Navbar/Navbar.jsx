@@ -7,9 +7,6 @@ function Navbar() {
   const links = [
     { href: "#home", label: "Home" },
     { href: "#about", label: "About" },
-    { href: "#skills", label: "Skills" },
-    { href: "#experience", label: "Experience" },
-    { href: "#certifications", label: "Achievements" },
     { href: "#contact", label: "Contact" },
   ];
 

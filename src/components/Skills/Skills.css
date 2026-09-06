@@ -7,7 +7,7 @@
   position: relative;
   background: #050505;
   color: #ffffff;
-  padding: 120px 6%;
+  padding: 80px 6%;
   overflow: hidden;
   isolation: isolate;
 }
@@ -95,13 +95,17 @@
 
   color: #ffffff;
 
-  font-size: clamp(2.7rem, 6vw, 5rem);
+  font-size: clamp(2rem, 6vw, 3.5rem);
 
-  font-weight: 800;
+  font-weight: 900;
 
-  line-height: 0.95;
+  line-height: 1.1;
 
-  letter-spacing: -3px;
+  letter-spacing: -0.04em;
+
+  text-transform: uppercase;
+
+  font-family: 'Arial Black', 'Arial', sans-serif;
 }
 
 .section-header p {

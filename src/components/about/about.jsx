@@ -34,10 +34,12 @@ function About() {
   const profileSrc = about.profilePic
     ? about.profilePic.startsWith("/uploads/")
       ? `${import.meta.env.VITE_API_BASE_URL || "http://localhost:4000"}${about.profilePic}`
-      : about.profilePic.startsWith("/images/")
+      : about.profilePic.startsWith("http")
         ? about.profilePic
-        : `/images/${about.profilePic}`
-    : "/images/portrait.png";
+        : about.profilePic.startsWith("/images/")
+          ? about.profilePic
+          : `${import.meta.env.VITE_API_BASE_URL || "http://localhost:4000"}${about.profilePic}`
+    : "/images/portrait.jpeg";
 
   const handleDownloadCv = async () => {
     setDownloadMessage("");

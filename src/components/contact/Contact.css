@@ -4,7 +4,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: #080808;
   color: #ffffff;
-  padding: 20px 0;
+  padding: 80px 0;
 }
 
 .contact-background {
@@ -59,11 +59,11 @@
 
 .header-title h2 {
   font-family: 'Arial Black', 'Arial', sans-serif;
-  font-size: clamp(3rem, 9vw, 6rem);
-  font-weight: 700;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 900;
   text-transform: uppercase;
-  line-height: 0.75;
-  letter-spacing: -0.06em;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
   margin: 0;
   color: #ffffff;
 }
