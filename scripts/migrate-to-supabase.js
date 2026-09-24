@@ -339,8 +339,9 @@ async function migrateProjects(projects = []) {
           description: project.description,
           category: project.category,
           technologies: project.technologies,
-          url: project.url,
-          github_url:
+          demo: project.demo || project.url || null,
+          github:
+            project.github ||
             project.githubUrl ||
             project.github_url ||
             null,
