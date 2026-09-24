@@ -1,26 +1,26 @@
 import "./projects.css";
 import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
-
-function resolveImage(src) {
-  if (!src) return "";
-  return src.startsWith("/uploads/") ? `${API_BASE}${src}` : src;
+function resolveImage(project) {
+  const src = project.local_image || project.localImage || project.image_url || project.imageUrl || project.image || project.file_url || project.fileUrl;
+  if (!src) return null;
+  // Only deployable project-local assets are accepted for portfolio imagery.
+  return src.startsWith("/images/") ? src : null;
 }
 
 function ProjectCard({ project, onViewProject }) {
-  const imageSrc = resolveImage(project.imageUrl || project.image || project.fileUrl || "");
+  const imageSrc = resolveImage(project);
   const displayDescription = project.shortDescription || project.description;
 
   return (
     <div className="project-card">
 
       <div className="project-image-wrapper">
-        <img
-          src={imageSrc}
-          alt={project.title}
-          className="project-image"
-        />
+        {imageSrc ? (
+          <img src={imageSrc} alt={project.title} className="project-image" />
+        ) : (
+          <div className="project-image project-image-placeholder" aria-hidden="true" />
+        )}
       </div>
 
       <div className="project-content">
