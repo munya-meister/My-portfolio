@@ -1,5 +1,5 @@
 import "./Footer.css";
-import { FaHeart, FaArrowUp } from "react-icons/fa";
+import { FaArrowUp } from "react-icons/fa";
 
 function Footer() {
   return (

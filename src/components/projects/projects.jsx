@@ -3,22 +3,13 @@ import { useEffect, useState } from "react";
 import initialProjects from "./ProjectsData";
 import ProjectCard from "./projectCard";
 import ProjectModal from "./ProjectModal";
-import { fetchProjects, createProject } from "../../api";
+import { fetchProjects } from "../../api";
 
 function Projects() {
   const [projects, setProjects] = useState(initialProjects);
   const [activeFilter, setActiveFilter] = useState("All");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showForm, setShowForm] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    technologies: "",
-    demo: "",
-    github: "",
-    file: null,
-  });
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -89,60 +80,6 @@ function Projects() {
 
   const handleCloseModal = () => {
     setSelectedProject(null);
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((current) => ({ ...current, [name]: value }));
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0] || null;
-    setFormData((current) => ({ ...current, file }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const payload = new FormData();
-    payload.append("title", formData.title.trim() || "Untitled Project");
-    payload.append("description", formData.description.trim());
-    payload.append("technologies", formData.technologies.trim());
-    payload.append("demo", formData.demo.trim());
-    payload.append("github", formData.github.trim());
-    if (formData.file) {
-      payload.append("file", formData.file);
-    }
-
-    try {
-      const created = await createProject(payload);
-      setProjects((current) => [
-        {
-          ...created,
-          image: created.imageUrl || created.fileUrl || created.image || "",
-          technologies: Array.isArray(created.technologies)
-            ? created.technologies
-            : typeof created.technologies === "string"
-              ? created.technologies
-                  .split(",")
-                  .map((tech) => tech.trim())
-                  .filter(Boolean)
-              : [],
-        },
-        ...current,
-      ]);
-      setShowForm(false);
-      setFormData({
-        title: "",
-        description: "",
-        technologies: "",
-        demo: "",
-        github: "",
-        file: null,
-      });
-    } catch (err) {
-      setError("Could not save project to backend.");
-    }
   };
 
   return (

@@ -5,6 +5,9 @@ import {
   createCertificate,
   fetchProjects,
   createProject,
+  getAdminToken,
+  adminLogin,
+  adminLogout,
 } from "../../api";
 
 function SkillsInput({ value, onChange }) {
@@ -20,7 +23,9 @@ function SkillsInput({ value, onChange }) {
 }
 
 export default function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => Boolean(getAdminToken())
+  );
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
 
@@ -52,12 +57,6 @@ export default function Admin() {
   });
 
   useEffect(() => {
-    if (sessionStorage.getItem("adminAuth") === "true") {
-      setIsAuthenticated(true);
-    }
-  }, []);
-
-  useEffect(() => {
     if (!isAuthenticated) return;
 
     async function load() {
@@ -86,32 +85,21 @@ export default function Admin() {
   // LOGIN
   // =======================
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
-    console.clear();
-
-    console.log("Typed Password:");
-    console.log(password);
-
-    console.log("VITE_ADMIN_PASSWORD:");
-    console.log(import.meta.env.VITE_ADMIN_PASSWORD);
-
-    if (password === import.meta.env.VITE_ADMIN_PASSWORD) {
-      console.log("LOGIN SUCCESS");
-
-      sessionStorage.setItem("adminAuth", "true");
+    setLoginError("");
+    
+    try {
+      await adminLogin(password);
       setIsAuthenticated(true);
-      setLoginError("");
-    } else {
-      console.log("LOGIN FAILED");
-
-      setLoginError("Incorrect password");
+      setPassword("");
+    } catch (err) {
+      setLoginError(err.message || "Incorrect password");
     }
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("adminAuth");
+    adminLogout();
     setIsAuthenticated(false);
   };
 
@@ -158,8 +146,7 @@ export default function Admin() {
         verifyUrl: "",
         file: null,
       });
-    } catch (err) {
-      console.error(err);
+    } catch {
       setError("Could not upload certificate.");
     } finally {
       setSubmitting("");

@@ -7,3 +7,32 @@ server/data/db.json
 .DS_Store
 Thumbs.db
 *.log
+
+# Local Netlify folder
+.netlify
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Build/dependencies
+node_modules/
+dist/
+
+# Local backups and temporary files
+*.zip
+netlify-api.txt
+
+# Local/duplicate project folders
+my-project/
+
+# Supabase local files
+.supabase/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Logs
+*.log

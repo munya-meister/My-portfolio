@@ -1,13 +1,9 @@
 import "./Contact.css";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
-  FaEnvelope,
   FaGithub,
   FaLinkedin,
   FaInstagram,
-  FaPaperPlane,
-  FaSpinner,
   FaCheckCircle,
   FaTimesCircle,
 } from "react-icons/fa";

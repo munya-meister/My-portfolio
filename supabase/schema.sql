@@ -1,7 +1,6 @@
--- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Create about table
+-- ABOUT
 CREATE TABLE IF NOT EXISTS about (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   profile_pic TEXT,
@@ -9,12 +8,12 @@ CREATE TABLE IF NOT EXISTS about (
   bio1 TEXT NOT NULL,
   bio2 TEXT,
   cv_url TEXT,
-  socials JSONB DEFAULT '{}',
+  socials JSONB DEFAULT '{}'::jsonb,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create projects table
+-- PROJECTS
 CREATE TABLE IF NOT EXISTS projects (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   title TEXT NOT NULL,
@@ -29,7 +28,7 @@ CREATE TABLE IF NOT EXISTS projects (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create certificates table
+-- CERTIFICATES
 CREATE TABLE IF NOT EXISTS certificates (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   title TEXT NOT NULL,
@@ -49,7 +48,7 @@ CREATE TABLE IF NOT EXISTS certificates (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create contact_messages table for fallback contact form storage
+-- CONTACT MESSAGES
 CREATE TABLE IF NOT EXISTS contact_messages (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
@@ -62,7 +61,7 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   error TEXT
 );
 
--- Create function to update updated_at timestamp
+-- UPDATED_AT FUNCTION
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -71,55 +70,49 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Add triggers for updated_at
-CREATE TRIGGER update_about_updated_at BEFORE UPDATE ON about
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+-- TRIGGERS
+DROP TRIGGER IF EXISTS update_about_updated_at ON about;
+CREATE TRIGGER update_about_updated_at
+BEFORE UPDATE ON about
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_projects_updated_at BEFORE UPDATE ON projects
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+DROP TRIGGER IF EXISTS update_projects_updated_at ON projects;
+CREATE TRIGGER update_projects_updated_at
+BEFORE UPDATE ON projects
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_certificates_updated_at BEFORE UPDATE ON certificates
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+DROP TRIGGER IF EXISTS update_certificates_updated_at ON certificates;
+CREATE TRIGGER update_certificates_updated_at
+BEFORE UPDATE ON certificates
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
 
--- Insert default about record if it doesn't exist
-INSERT INTO about (profile_pic, heading, bio1, bio2, cv_url, socials)
-VALUES (
-  '',
-  'Passionate About Building Brands, Websites & Creative Experiences.',
-  'I''m Munyaradzi Mbewe, a Digital Marketer, Web Developer and Music Writer who enjoys combining creativity with technology to help businesses and creators grow online.',
-  'From designing modern websites to creating high-converting marketing campaigns and writing music, I enjoy turning ideas into memorable digital experiences that leave a lasting impression.',
-  '/cv.pdf',
-  '{}'::jsonb
-)
-ON CONFLICT DO NOTHING;
-
--- Enable Row Level Security (RLS)
+-- ENABLE RLS
 ALTER TABLE about ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE certificates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 
--- Create policies for about table (single record, public read, admin write)
-CREATE POLICY "About public read" ON about FOR SELECT USING (true);
-CREATE POLICY "About admin write" ON about FOR ALL USING (true);
+-- PUBLIC READ
+DROP POLICY IF EXISTS "About public read" ON about;
+CREATE POLICY "About public read"
+ON about FOR SELECT
+USING (true);
 
--- Create policies for projects table (public read, admin write)
-CREATE POLICY "Projects public read" ON projects FOR SELECT USING (true);
-CREATE POLICY "Projects admin write" ON projects FOR ALL USING (true);
+DROP POLICY IF EXISTS "Projects public read" ON projects;
+CREATE POLICY "Projects public read"
+ON projects FOR SELECT
+USING (true);
 
--- Create policies for certificates table (public read, admin write)
-CREATE POLICY "Certificates public read" ON certificates FOR SELECT USING (true);
-CREATE POLICY "Certificates admin write" ON certificates FOR ALL USING (true);
+DROP POLICY IF EXISTS "Certificates public read" ON certificates;
+CREATE POLICY "Certificates public read"
+ON certificates FOR SELECT
+USING (true);
 
--- Create policies for contact_messages table (admin write only)
-CREATE POLICY "Contact messages insert" ON contact_messages FOR INSERT WITH CHECK (true);
-CREATE POLICY "Contact messages read" ON contact_messages FOR SELECT USING (true);
-
--- Storage buckets (create these in Supabase dashboard):
--- 1. 'certificates' - for certificate images
--- 2. 'profile' - for profile images  
--- 3. 'projects' - for project images
--- 4. 'documents' - for CV and other documents
-
--- Enable public access for storage buckets (configure in Supabase dashboard):
--- Set bucket policies to allow public read access
+-- CONTACT INSERT
+DROP POLICY IF EXISTS "Contact messages insert" ON contact_messages;
+CREATE POLICY "Contact messages insert"
+ON contact_messages FOR INSERT
+WITH CHECK (true);

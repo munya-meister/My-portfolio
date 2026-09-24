@@ -1,325 +1,536 @@
-import { createClient } from '@supabase/supabase-js';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import crypto from 'crypto';
+import { createClient } from "@supabase/supabase-js";
+import fs from "fs/promises";
+import path from "path";
+import crypto from "crypto";
+import dotenv from "dotenv";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
-// Load environment variables
-const dotenv = await import('dotenv');
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
-
-// Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Use service role for migrations
+const supabaseKey =
+  process.env.SUPABASE_SECRET_KEY ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables');
-  process.exit(1);
+  throw new Error(
+    "Missing SUPABASE_URL or SUPABASE_SECRET_KEY in .env"
+  );
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Read existing db.json
-const dbPath = path.resolve(__dirname, '../server/data/db.json');
-let existingData = { certificates: [], projects: [], about: {} };
+const dbPath = path.resolve(process.cwd(), "server/data/db.json");
+const uploadsRoot = path.resolve(process.cwd(), "server/uploads");
 
-try {
-  if (fs.existsSync(dbPath)) {
-    const dbContent = fs.readFileSync(dbPath, 'utf8');
-    existingData = JSON.parse(dbContent);
-    console.log('✅ Loaded existing data from db.json');
-  } else {
-    console.log('⚠️  db.json not found, will use empty data');
+const BUCKETS = {
+  certificates: "certificates",
+  projects: "projects",
+  profile: "profile",
+};
+
+const failures = [];
+
+async function fileExists(filePath) {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
   }
-} catch (error) {
-  console.error('❌ Error reading db.json:', error.message);
-  process.exit(1);
 }
 
-// Helper function to upload file to Supabase Storage
-async function uploadFileToStorage(filePath, bucket, folder) {
-  try {
-    if (!fs.existsSync(filePath)) {
-      console.log(`⚠️  File not found: ${filePath}`);
-      return null;
-    }
+function getMimeType(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
 
-    const fileName = path.basename(filePath);
-    const fileBuffer = fs.readFileSync(filePath);
-    const fileExt = path.extname(fileName);
-    const contentType = getContentType(fileExt);
+  const types = {
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".webp": "image/webp",
+    ".gif": "image/gif",
+    ".pdf": "application/pdf",
+    ".mp4": "video/mp4",
+    ".webm": "video/webm",
+  };
 
-    const storagePath = `${folder}/${crypto.randomUUID()}${fileExt}`;
+  return types[ext] || "application/octet-stream";
+}
 
-    const { data, error } = await supabase.storage
-      .from(bucket)
-      .upload(storagePath, fileBuffer, {
-        contentType,
-        upsert: false
-      });
-
-    if (error) {
-      console.error(`❌ Error uploading ${fileName}:`, error.message);
-      return null;
-    }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from(bucket)
-      .getPublicUrl(storagePath);
-
-    console.log(`✅ Uploaded ${fileName} -> ${publicUrl}`);
-    return publicUrl;
-  } catch (error) {
-    console.error(`❌ Error processing file ${filePath}:`, error.message);
+function getLocalFilename(value, folder) {
+  if (!value || typeof value !== "string") {
     return null;
   }
+
+  const normalized = value.replace(/\\/g, "/");
+
+  const marker = `/uploads/${folder}/`;
+  const index = normalized.indexOf(marker);
+
+  if (index === -1) {
+    return null;
+  }
+
+  return decodeURIComponent(
+    normalized.substring(index + marker.length)
+  );
 }
 
-function getContentType(extension) {
-  const contentTypes = {
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.png': 'image/png',
-    '.webp': 'image/webp',
-    '.pdf': 'application/pdf',
-    '.gif': 'image/gif'
-  };
-  return contentTypes[extension.toLowerCase()] || 'application/octet-stream';
+async function uploadFileToStorage(
+  filePath,
+  bucket,
+  folder,
+  originalName
+) {
+  const buffer = await fs.readFile(filePath);
+
+  const safeName = path.basename(originalName || filePath);
+
+  const storagePath = `${folder}/${Date.now()}-${crypto.randomUUID()}-${safeName}`;
+
+  console.log(`   📤 Uploading: ${safeName}`);
+
+  const { error } = await supabase.storage
+    .from(bucket)
+    .upload(storagePath, buffer, {
+      contentType: getMimeType(filePath),
+      upsert: false,
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  const { data } = supabase.storage
+    .from(bucket)
+    .getPublicUrl(storagePath);
+
+  console.log(`   ✅ Uploaded successfully`);
+
+  return data.publicUrl;
 }
 
-// Migrate certificates
-async function migrateCertificates() {
-  console.log('\n📋 Migrating certificates...');
-  
-  const { data: existingCerts, error: fetchError } = await supabase
-    .from('certificates')
-    .select('id');
-  
-  if (fetchError) {
-    console.error('❌ Error fetching existing certificates:', fetchError.message);
+
+/* =========================================================
+   CERTIFICATES
+========================================================= */
+
+async function migrateCertificates(certificates = []) {
+  console.log("\n📋 Migrating certificates...");
+
+  const { data: existingRows, error } = await supabase
+    .from("certificates")
+    .select("id,file_url");
+
+  if (error) {
+    throw error;
+  }
+
+  const existingMap = new Map(
+    (existingRows || []).map((row) => [String(row.id), row])
+  );
+
+  let migrated = 0;
+  let updated = 0;
+  let skipped = 0;
+
+  for (const certificate of certificates) {
+    try {
+      const id = certificate.id;
+      const existing = existingMap.get(String(id));
+
+      let fileUrl =
+        certificate.fileUrl ||
+        certificate.file_url ||
+        null;
+
+      /*
+       * Try to locate the original local certificate file.
+       */
+      const localFilename =
+        getLocalFilename(certificate.fileUrl, "certificates") ||
+        getLocalFilename(certificate.file_url, "certificates");
+
+      if (localFilename) {
+        const localPath = path.join(
+          uploadsRoot,
+          "certificates",
+          localFilename
+        );
+
+        if (await fileExists(localPath)) {
+          /*
+           * Upload even if the database record already exists.
+           * This fixes the previous failed migration.
+           */
+          fileUrl = await uploadFileToStorage(
+            localPath,
+            BUCKETS.certificates,
+            "certificates",
+            localFilename
+          );
+        }
+      }
+
+      if (existing) {
+        /*
+         * Update existing record if we now have a Supabase URL.
+         */
+        if (
+          fileUrl &&
+          fileUrl !== existing.file_url
+        ) {
+          const { error: updateError } = await supabase
+            .from("certificates")
+            .update({
+              file_url: fileUrl,
+            })
+            .eq("id", id);
+
+          if (updateError) {
+            throw updateError;
+          }
+
+          console.log(
+            `   🔄 Updated certificate: ${certificate.title}`
+          );
+
+          updated++;
+        } else {
+          skipped++;
+        }
+
+        continue;
+      }
+
+      /*
+       * New certificate.
+       */
+      const { error: insertError } = await supabase
+        .from("certificates")
+        .insert({
+          id: certificate.id,
+          title: certificate.title,
+          issuer: certificate.issuer,
+          date: certificate.date,
+          description: certificate.description,
+          skills: certificate.skills,
+          category: certificate.category,
+          file_url: fileUrl,
+        });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      console.log(
+        `   ✅ Migrated certificate: ${certificate.title}`
+      );
+
+      migrated++;
+
+    } catch (err) {
+      console.error(
+        `   ❌ Failed certificate: ${certificate.title || "Unknown"}`
+      );
+
+      console.error(`      ${err.message}`);
+
+      failures.push({
+        type: "certificate",
+        name: certificate.title,
+        error: err.message,
+      });
+    }
+  }
+
+  console.log(
+    `📊 Certificates: ${migrated} migrated, ${updated} updated, ${skipped} skipped`
+  );
+}
+
+
+/* =========================================================
+   PROJECTS
+========================================================= */
+
+async function migrateProjects(projects = []) {
+  console.log("\n📋 Migrating projects...");
+
+  const { data: existingRows, error } = await supabase
+    .from("projects")
+    .select("id,file_url");
+
+  if (error) {
+    throw error;
+  }
+
+  const existingMap = new Map(
+    (existingRows || []).map((row) => [String(row.id), row])
+  );
+
+  let migrated = 0;
+  let updated = 0;
+  let skipped = 0;
+
+  for (const project of projects) {
+    try {
+      const id = project.id;
+      const existing = existingMap.get(String(id));
+
+      let fileUrl =
+        project.fileUrl ||
+        project.file_url ||
+        null;
+
+      const localFilename =
+        getLocalFilename(project.fileUrl, "projects") ||
+        getLocalFilename(project.file_url, "projects");
+
+      if (localFilename) {
+        const localPath = path.join(
+          uploadsRoot,
+          "projects",
+          localFilename
+        );
+
+        if (await fileExists(localPath)) {
+          fileUrl = await uploadFileToStorage(
+            localPath,
+            BUCKETS.projects,
+            "projects",
+            localFilename
+          );
+        }
+      }
+
+      if (existing) {
+        if (
+          fileUrl &&
+          fileUrl !== existing.file_url
+        ) {
+          const { error: updateError } = await supabase
+            .from("projects")
+            .update({
+              file_url: fileUrl,
+            })
+            .eq("id", id);
+
+          if (updateError) {
+            throw updateError;
+          }
+
+          console.log(
+            `   🔄 Updated project: ${project.title}`
+          );
+
+          updated++;
+        } else {
+          skipped++;
+        }
+
+        continue;
+      }
+
+      const { error: insertError } = await supabase
+        .from("projects")
+        .insert({
+          id: project.id,
+          title: project.title,
+          description: project.description,
+          category: project.category,
+          technologies: project.technologies,
+          url: project.url,
+          github_url:
+            project.githubUrl ||
+            project.github_url ||
+            null,
+          file_url: fileUrl,
+        });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      console.log(
+        `   ✅ Migrated project: ${project.title}`
+      );
+
+      migrated++;
+
+    } catch (err) {
+      console.error(
+        `   ❌ Failed project: ${project.title || "Unknown"}`
+      );
+
+      console.error(`      ${err.message}`);
+
+      failures.push({
+        type: "project",
+        name: project.title,
+        error: err.message,
+      });
+    }
+  }
+
+  console.log(
+    `📊 Projects: ${migrated} migrated, ${updated} updated, ${skipped} skipped`
+  );
+}
+
+
+/* =========================================================
+   ABOUT / PROFILE
+========================================================= */
+
+async function migrateAbout(about) {
+  console.log("\n📋 Migrating about information...");
+
+  if (!about) {
+    console.log("⚠️ No about information found.");
     return;
   }
-  
-  const existingIds = new Set(existingCerts?.map(c => c.id) || []);
-  let migratedCount = 0;
-  let skippedCount = 0;
-  
-  for (const cert of existingData.certificates) {
-    if (existingIds.has(cert.id)) {
-      console.log(`⏭️  Skipping certificate (already exists): ${cert.title}`);
-      skippedCount++;
-      continue;
-    }
-    
-    // Handle file upload if there's a local file
-    let fileUrl = cert.fileUrl || cert.imageUrl;
-    
-    if (cert.fileUrl && cert.fileUrl.startsWith('/uploads/certificates/')) {
-      const fileName = cert.fileUrl.split('/').pop();
-      const localPath = path.resolve(__dirname, '../server/uploads/certificates', fileName);
-      
-      const uploadedUrl = await uploadFileToStorage(localPath, 'certificates', 'certificate-images');
-      if (uploadedUrl) {
-        fileUrl = uploadedUrl;
-      }
-    }
-    
-    const { error: insertError } = await supabase
-      .from('certificates')
-      .insert({
-        id: cert.id,
-        title: cert.title,
-        description: cert.description || '',
-        platform: cert.platform || '',
-        category: cert.category || '',
-        date: cert.date || '',
-        skills: cert.skills || [],
-        technologies: cert.technologies || [],
-        demo: cert.demo || '',
-        github: cert.github || '',
-        url: cert.url || '',
-        verify_url: cert.verifyUrl || '',
-        image_url: cert.imageUrl || '',
-        file_url: fileUrl,
-        created_at: cert.createdAt || new Date().toISOString()
-      });
-    
-    if (insertError) {
-      console.error(`❌ Error inserting certificate "${cert.title}":`, insertError.message);
-    } else {
-      console.log(`✅ Migrated certificate: ${cert.title}`);
-      migratedCount++;
-    }
-  }
-  
-  console.log(`📊 Certificates: ${migratedCount} migrated, ${skippedCount} skipped`);
-}
 
-// Migrate projects
-async function migrateProjects() {
-  console.log('\n📋 Migrating projects...');
-  
-  const { data: existingProjects, error: fetchError } = await supabase
-    .from('projects')
-    .select('id');
-  
-  if (fetchError) {
-    console.error('❌ Error fetching existing projects:', fetchError.message);
-    return;
-  }
-  
-  const existingIds = new Set(existingProjects?.map(p => p.id) || []);
-  let migratedCount = 0;
-  let skippedCount = 0;
-  
-  for (const project of existingData.projects) {
-    if (existingIds.has(project.id)) {
-      console.log(`⏭️  Skipping project (already exists): ${project.title}`);
-      skippedCount++;
-      continue;
-    }
-    
-    // Handle file upload if there's a local file
-    let fileUrl = project.fileUrl || project.imageUrl;
-    
-    if (project.fileUrl && project.fileUrl.startsWith('/uploads/projects/')) {
-      const fileName = project.fileUrl.split('/').pop();
-      const localPath = path.resolve(__dirname, '../server/uploads/projects', fileName);
-      
-      const uploadedUrl = await uploadFileToStorage(localPath, 'projects', 'project-images');
-      if (uploadedUrl) {
-        fileUrl = uploadedUrl;
-      }
-    }
-    
-    const { error: insertError } = await supabase
-      .from('projects')
-      .insert({
-        id: project.id,
-        title: project.title,
-        description: project.description || '',
-        category: project.category || 'Web Development',
-        technologies: project.technologies || [],
-        demo: project.demo || '',
-        github: project.github || '',
-        image_url: project.imageUrl || '',
-        file_url: fileUrl,
-        created_at: project.createdAt || new Date().toISOString()
-      });
-    
-    if (insertError) {
-      console.error(`❌ Error inserting project "${project.title}":`, insertError.message);
-    } else {
-      console.log(`✅ Migrated project: ${project.title}`);
-      migratedCount++;
-    }
-  }
-  
-  console.log(`📊 Projects: ${migratedCount} migrated, ${skippedCount} skipped`);
-}
-
-// Migrate about information
-async function migrateAbout() {
-  console.log('\n📋 Migrating about information...');
-  
-  const { data: existingAbout, error: fetchError } = await supabase
-    .from('about')
-    .select('id')
-    .limit(1);
-  
-  if (fetchError) {
-    console.error('❌ Error fetching existing about:', fetchError.message);
-    return;
-  }
-  
-  if (existingAbout && existingAbout.length > 0) {
-    console.log('⏭️  About record already exists, updating...');
-    
-    // Handle profile picture upload
-    let profilePic = existingData.about.profilePic || '';
-    
-    if (existingData.about.profilePic && existingData.about.profilePic.startsWith('/uploads/about/')) {
-      const fileName = existingData.about.profilePic.split('/').pop();
-      const localPath = path.resolve(__dirname, '../server/uploads/about', fileName);
-      
-      const uploadedUrl = await uploadFileToStorage(localPath, 'profile', 'profile-images');
-      if (uploadedUrl) {
-        profilePic = uploadedUrl;
-      }
-    }
-    
-    const { error: updateError } = await supabase
-      .from('about')
-      .update({
-        profile_pic: profilePic,
-        heading: existingData.about.heading || '',
-        bio1: existingData.about.bio1 || '',
-        bio2: existingData.about.bio2 || '',
-        cv_url: existingData.about.cvUrl || '',
-        socials: existingData.about.socials || {}
-      })
-      .eq('id', existingAbout[0].id);
-    
-    if (updateError) {
-      console.error('❌ Error updating about:', updateError.message);
-    } else {
-      console.log('✅ Updated about information');
-    }
-  } else {
-    console.log('Creating new about record...');
-    
-    // Handle profile picture upload
-    let profilePic = existingData.about.profilePic || '';
-    
-    if (existingData.about.profilePic && existingData.about.profilePic.startsWith('/uploads/about/')) {
-      const fileName = existingData.about.profilePic.split('/').pop();
-      const localPath = path.resolve(__dirname, '../server/uploads/about', fileName);
-      
-      const uploadedUrl = await uploadFileToStorage(localPath, 'profile', 'profile-images');
-      if (uploadedUrl) {
-        profilePic = uploadedUrl;
-      }
-    }
-    
-    const { error: insertError } = await supabase
-      .from('about')
-      .insert({
-        profile_pic: profilePic,
-        heading: existingData.about.heading || '',
-        bio1: existingData.about.bio1 || '',
-        bio2: existingData.about.bio2 || '',
-        cv_url: existingData.about.cvUrl || '',
-        socials: existingData.about.socials || {}
-      });
-    
-    if (insertError) {
-      console.error('❌ Error inserting about:', insertError.message);
-    } else {
-      console.log('✅ Created about information');
-    }
-  }
-}
-
-// Main migration function
-async function runMigration() {
-  console.log('🚀 Starting Supabase migration...\n');
-  
   try {
-    await migrateCertificates();
-    await migrateProjects();
-    await migrateAbout();
-    
-    console.log('\n✅ Migration completed successfully!');
-    console.log('⚠️  Original db.json and files preserved at server/data/db.json and server/uploads/');
-    console.log('⚠️  Verify the migrated data before deleting original files');
-    
-  } catch (error) {
-    console.error('\n❌ Migration failed:', error);
-    process.exit(1);
+    let profileImageUrl =
+      about.profileImageUrl ||
+      about.profile_image_url ||
+      null;
+
+    const localFilename =
+      getLocalFilename(
+        about.profileImageUrl,
+        "about"
+      ) ||
+      getLocalFilename(
+        about.profile_image_url,
+        "about"
+      );
+
+    if (localFilename) {
+      const localPath = path.join(
+        uploadsRoot,
+        "about",
+        localFilename
+      );
+
+      if (await fileExists(localPath)) {
+        profileImageUrl = await uploadFileToStorage(
+          localPath,
+          BUCKETS.profile,
+          "profile",
+          localFilename
+        );
+      }
+    }
+
+    const { data: existing, error: fetchError } =
+      await supabase
+        .from("about")
+        .select("id")
+        .limit(1);
+
+    if (fetchError) {
+      throw fetchError;
+    }
+
+    const aboutData = {
+      profile_pic: profileImageUrl,
+      heading: about.heading,
+      bio1: about.bio1,
+      bio2: about.bio2,
+      cv_url: about.cvUrl || about.cv_url || null,
+      socials: about.socials || {},
+    };
+
+    if (existing && existing.length > 0) {
+      const { error: updateError } = await supabase
+        .from("about")
+        .update(aboutData)
+        .eq("id", existing[0].id);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      console.log("   🔄 Updated about information");
+
+    } else {
+      const { error: insertError } = await supabase
+        .from("about")
+        .insert(aboutData);
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      console.log("   ✅ Created about information");
+    }
+
+  } catch (err) {
+    console.error("   ❌ Failed about migration");
+    console.error(`      ${err.message}`);
+
+    failures.push({
+      type: "about",
+      name: "About information",
+      error: err.message,
+    });
   }
 }
 
-runMigration();
+
+/* =========================================================
+   MAIN MIGRATION
+========================================================= */
+
+async function runMigration() {
+  console.log("🚀 Starting Supabase migration...\n");
+
+  const raw = await fs.readFile(dbPath, "utf8");
+  const db = JSON.parse(raw);
+
+  console.log("✅ Loaded existing data from db.json");
+
+  await migrateCertificates(
+    db.certificates || []
+  );
+
+  await migrateProjects(
+    db.projects || []
+  );
+
+  await migrateAbout(
+    db.about
+  );
+
+  console.log("\n======================================");
+  console.log("        MIGRATION SUMMARY");
+  console.log("======================================");
+
+  if (failures.length === 0) {
+    console.log("✅ Migration completed successfully!");
+  } else {
+    console.log(
+      `⚠️ Migration completed with ${failures.length} failure(s).`
+    );
+
+    for (const failure of failures) {
+      console.log(
+        `❌ ${failure.type}: ${failure.name}`
+      );
+      console.log(
+        `   ${failure.error}`
+      );
+    }
+
+    process.exitCode = 1;
+  }
+
+  console.log("\n⚠️ Original db.json and uploads were preserved.");
+}
+
+runMigration().catch((error) => {
+  console.error("\n❌ Migration failed completely:");
+  console.error(error);
+  process.exitCode = 1;
+});

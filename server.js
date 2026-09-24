@@ -116,7 +116,7 @@ app.post("/api/contact", async (req, res) => {
 
   try {
     await transporter.sendMail({
-       `Portfolio Contact <${from:emailUser}>`,
+      from: emailUser,
       to: contactRecipient,
       replyTo: email,
       subject: `Portfolio Contact: ${subject}`,
