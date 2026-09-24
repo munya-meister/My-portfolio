@@ -1,16 +1,89 @@
-# React + Vite
+# Munyaradzi Mbewe — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal portfolio built with React and Vite, with a Netlify Functions API and Supabase for persistent data and file storage.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + Vite
+- Netlify Functions
+- Supabase Postgres + Storage
+- Framer Motion
+- Resend for contact email delivery
 
-## React Compiler
+## Local development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+For the full Netlify Functions flow, use Netlify's local development environment after configuring the required environment variables.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Environment variables
+
+Never commit real credentials. Configure server-side secrets in Netlify and keep local values in ignored environment files.
+
+```text
+SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+ADMIN_PASSWORD=
+RESEND_API_KEY=
+CONTACT_EMAIL=
+```
+
+Optional frontend development variable:
+
+```text
+VITE_API_BASE_URL=
+```
+
+Do not expose the Supabase service-role key or admin password through a `VITE_` variable.
+
+## Supabase setup
+
+Run `supabase/schema.sql` in the Supabase SQL editor. It creates the portfolio tables, public-read RLS policies, and the four storage buckets used by the API:
+
+- `certificates`
+- `projects`
+- `profile`
+- `documents`
+
+The buckets are public because the portfolio serves uploaded assets using Supabase public URLs. Uploads and destructive admin operations are performed server-side with the service-role key.
+
+If migrating the old local JSON/upload data, configure a local `.env` and run:
+
+```bash
+npm run migrate
+```
+
+## Netlify deployment
+
+The repository includes `netlify.toml` with:
+
+- build command: `npm run build`
+- publish directory: `dist`
+- functions directory: `netlify/functions`
+- `/api/*` routing to the portfolio API function
+- SPA fallback to `index.html`
+
+Before deploying, add the server-side environment variables listed above to the Netlify site configuration.
+
+## Admin
+
+The admin UI authenticates against `/api/admin/login`. A successful login receives a time-limited token stored in `sessionStorage`; the admin password itself is not bundled into the frontend.
+
+## Useful commands
+
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run preview
+npm run migrate
+```
+
+## Security
+
+- `.env` and environment-specific secret files are ignored by Git.
+- Never commit a Supabase service-role key.
+- Never put server secrets in variables prefixed with `VITE_`.
