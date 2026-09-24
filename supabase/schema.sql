@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS about (
   bio2 TEXT,
   cv_url TEXT,
   socials JSONB DEFAULT '{}'::jsonb,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- PROJECTS
@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS projects (
   github TEXT,
   image_url TEXT,
   file_url TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- CERTIFICATES
@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS certificates (
   verify_url TEXT,
   image_url TEXT,
   file_url TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- CONTACT MESSAGES
@@ -55,11 +55,22 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   email TEXT NOT NULL,
   subject TEXT NOT NULL,
   message TEXT NOT NULL,
-  received_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  received_at TIMESTAMPTZ DEFAULT NOW(),
   status TEXT DEFAULT 'queued',
   source TEXT,
   error TEXT
 );
+
+-- STORAGE BUCKETS
+-- The API uses these exact bucket names. Public buckets are required because
+-- portfolio assets are rendered from getPublicUrl() URLs.
+INSERT INTO storage.buckets (id, name, public)
+VALUES
+  ('certificates', 'certificates', true),
+  ('projects', 'projects', true),
+  ('profile', 'profile', true),
+  ('documents', 'documents', true)
+ON CONFLICT (id) DO UPDATE SET public = EXCLUDED.public;
 
 -- UPDATED_AT FUNCTION
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -70,49 +81,35 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- TRIGGERS
 DROP TRIGGER IF EXISTS update_about_updated_at ON about;
 CREATE TRIGGER update_about_updated_at
 BEFORE UPDATE ON about
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 DROP TRIGGER IF EXISTS update_projects_updated_at ON projects;
 CREATE TRIGGER update_projects_updated_at
 BEFORE UPDATE ON projects
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 DROP TRIGGER IF EXISTS update_certificates_updated_at ON certificates;
 CREATE TRIGGER update_certificates_updated_at
 BEFORE UPDATE ON certificates
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- ENABLE RLS
+-- ROW LEVEL SECURITY
 ALTER TABLE about ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE certificates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 
--- PUBLIC READ
 DROP POLICY IF EXISTS "About public read" ON about;
-CREATE POLICY "About public read"
-ON about FOR SELECT
-USING (true);
+CREATE POLICY "About public read" ON about FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Projects public read" ON projects;
-CREATE POLICY "Projects public read"
-ON projects FOR SELECT
-USING (true);
+CREATE POLICY "Projects public read" ON projects FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Certificates public read" ON certificates;
-CREATE POLICY "Certificates public read"
-ON certificates FOR SELECT
-USING (true);
+CREATE POLICY "Certificates public read" ON certificates FOR SELECT USING (true);
 
--- CONTACT INSERT
 DROP POLICY IF EXISTS "Contact messages insert" ON contact_messages;
-CREATE POLICY "Contact messages insert"
-ON contact_messages FOR INSERT
-WITH CHECK (true);
+CREATE POLICY "Contact messages insert" ON contact_messages FOR INSERT WITH CHECK (true);
