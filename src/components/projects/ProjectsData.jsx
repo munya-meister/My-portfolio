@@ -1,13 +1,8 @@
-import pawpure from "../../assets/images/pawpure.jpg";
-import nyaradzo from "../../assets/images/nyaradzo.jpg";
-import grandmeister from "../../assets/images/grandmeister.jpg";
-import portfolioWebsite from "../../assets/images/portfolio.png";
-
 const projects = [
   {
     id: 1,
     title: "Personal Portfolio Website",
-    image: portfolioWebsite,
+    image: "/images/project-1.jpg",
     shortDescription: "Modern responsive portfolio showcasing digital marketing, web development and creative design work.",
     category: "Web Development",
     role: "Full Stack Developer & Designer",
@@ -25,7 +20,7 @@ const projects = [
   {
     id: 2,
     title: "PawPure Nutrition",
-    image: pawpure,
+    image: "/images/project-2.jpg",
     shortDescription: "Brand identity, social media content and website design for a pet nutrition company.",
     category: "Creative Design",
     role: "Brand Designer & Digital Marketer",
@@ -43,7 +38,7 @@ const projects = [
   {
     id: 3,
     title: "Nyaradzo Campaign",
-    image: nyaradzo,
+    image: "/images/project-3.jpg",
     shortDescription: "Educational digital marketing campaign focused on financial literacy and insurance awareness.",
     category: "Digital Marketing",
     role: "Digital Marketing Strategist",
@@ -61,7 +56,7 @@ const projects = [
   {
     id: 4,
     title: "Grandmeister Music",
-    image: grandmeister,
+    image: "/images/project-4.jpg",
     shortDescription: "Music brand identity and digital promotion for an emerging music artist.",
     category: "Creative Design",
     role: "Brand Designer & Digital Promoter",
@@ -79,7 +74,7 @@ const projects = [
   {
     id: 5,
     title: "SEO + AEO Project",
-    image: "https://via.placeholder.com/400x300/1a1a1a/dc143c?text=SEO+AEO",
+    image: null,
     shortDescription: "Search engine optimization and answer engine optimization project for improved digital visibility.",
     category: "Digital Marketing",
     role: "SEO Specialist",
@@ -97,7 +92,7 @@ const projects = [
   {
     id: 6,
     title: "Landing Page & Lead Magnet",
-    image: "https://via.placeholder.com/400x300/1a1a1a/dc143c?text=Landing+Page",
+    image: null,
     shortDescription: "High-converting landing page with lead magnet for digital marketing campaign.",
     category: "Digital Marketing",
     role: "Digital Marketer & Web Developer",
@@ -115,7 +110,7 @@ const projects = [
   {
     id: 7,
     title: "MusicoNet",
-    image: "https://via.placeholder.com/400x300/1a1a1a/dc143c?text=MusicoNet",
+    image: null,
     shortDescription: "Music streaming platform concept with user-focused design and functionality.",
     category: "Web Development",
     role: "UX/UI Designer & Developer",
@@ -133,7 +128,7 @@ const projects = [
   {
     id: 8,
     title: "Videl – Video Eloquence",
-    image: "https://via.placeholder.com/400x300/1a1a1a/dc143c?text=Videl",
+    image: null,
     shortDescription: "Video content platform focused on eloquent communication and storytelling.",
     category: "Web Development",
     role: "Full Stack Developer",
