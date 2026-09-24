@@ -31,13 +31,8 @@ function About() {
     };
   }, []);
 
-  const profileSrc = about.profilePic
-    ? about.profilePic.startsWith("/uploads/")
-      ? `${import.meta.env.VITE_API_BASE_URL || "http://localhost:4000"}${about.profilePic}`
-      : about.profilePic.startsWith("/images/")
-        ? about.profilePic
-        : `/images/${about.profilePic}`
-    : "/images/portrait.png";
+  // Profile artwork is a deployable local asset in public/images.
+  const profileSrc = "/images/portrait.jpeg";
 
   const handleDownloadCv = async () => {
     setDownloadMessage("");
