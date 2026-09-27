@@ -1,11 +1,10 @@
 import "./achievements.css";
 import { motion } from "framer-motion";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
-
-function resolveImage(src) {
-  if (!src) return "";
-  return src.startsWith("/uploads/") ? `${API_BASE}${src}` : src;
+function resolveImage(certificate) {
+  const src = certificate.local_image || certificate.localImage || certificate.image_url || certificate.imageUrl || certificate.image || certificate.file_url || certificate.fileUrl;
+  if (!src) return null;
+  return src.startsWith("/images/") ? src : null;
 }
 
 function AchievementCard({ certificate, index }) {
@@ -16,7 +15,7 @@ function AchievementCard({ certificate, index }) {
     }
   };
 
-  const imageSrc = resolveImage(certificate.imageUrl || certificate.image);
+  const imageSrc = resolveImage(certificate);
 
   return (
     <motion.article
@@ -28,13 +27,17 @@ function AchievementCard({ certificate, index }) {
       whileHover={{ y: -8, scale: 1.01 }}
     >
       <div className="achievement-image-wrap">
-        <motion.img
-          className="achievement-image"
-          src={imageSrc}
-          alt={certificate.title}
-          whileHover={{ scale: 1.06 }}
-          transition={{ duration: 0.4 }}
-        />
+        {imageSrc ? (
+          <motion.img
+            className="achievement-image"
+            src={imageSrc}
+            alt={certificate.title}
+            whileHover={{ scale: 1.06 }}
+            transition={{ duration: 0.4 }}
+          />
+        ) : (
+          <div className="achievement-image achievement-image-placeholder" aria-hidden="true" />
+        )}
       </div>
 
       <div className="achievement-content">
