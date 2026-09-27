@@ -30,10 +30,14 @@ function Achievements() {
               ...certificate,
 
               image:
+                certificate.local_image ||
+                certificate.localImage ||
+                certificate.image_url ||
                 certificate.imageUrl ||
-                certificate.fileUrl ||
                 certificate.image ||
-                "",
+                certificate.file_url ||
+                certificate.fileUrl ||
+                null,
 
               skills: Array.isArray(certificate.skills)
                 ? certificate.skills
@@ -241,7 +245,7 @@ function Achievements() {
               ========================== */}
 
               <div className="certificate-image-wrap">
-                {certificate.url ? (
+                {certificate.image && certificate.url ? (
                   <a
                     href={certificate.url}
                     target="_blank"
@@ -262,7 +266,7 @@ function Achievements() {
                       className="certificate-image"
                     />
                   </a>
-                ) : (
+                ) : certificate.image ? (
                   <img
                     src={certificate.image}
                     alt={`${certificate.platform || "Certificate"} certificate: ${certificate.title}`}
@@ -270,6 +274,8 @@ function Achievements() {
                     draggable="false"
                     className="certificate-image"
                   />
+                ) : (
+                  <div className="certificate-image certificate-image-placeholder" aria-hidden="true" />
                 )}
               </div>
 

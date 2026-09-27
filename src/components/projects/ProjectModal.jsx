@@ -2,25 +2,18 @@ import "./projects.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaExternalLinkAlt, FaGithub, FaTimes } from "react-icons/fa";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
-
-function resolveImage(src) {
-  if (!src) return "";
-  if (src.startsWith("/uploads/")) {
-    return `${API_BASE}${src}`;
-  }
-  if (src.startsWith("http")) {
-    return src;
-  }
-  if (src.startsWith("/images/")) {
-    return src;
-  }
-  return src;
-}
-
 function ProjectModal({ project, onClose }) {
   if (!project) return null;
-  const imageSrc = resolveImage(project.imageUrl || project.image || project.fileUrl || "");
+
+  const imageSrc =
+    project.local_image ||
+    project.localImage ||
+    project.image_url ||
+    project.imageUrl ||
+    project.image ||
+    project.file_url ||
+    project.fileUrl;
+  const localImageSrc = imageSrc?.startsWith("/images/") ? imageSrc : null;
 
   return (
     <AnimatePresence>
@@ -44,7 +37,11 @@ function ProjectModal({ project, onClose }) {
 
           <div className="modal-header">
             <div className="modal-image-wrapper">
-              <img src={imageSrc} alt={project.title} className="modal-image" />
+              {localImageSrc ? (
+                <img src={localImageSrc} alt={project.title} className="modal-image" />
+              ) : (
+                <div className="modal-image modal-image-placeholder" aria-hidden="true" />
+              )}
             </div>
             <div className="modal-title-section">
               <span className="modal-category">{project.category}</span>
