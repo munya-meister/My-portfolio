@@ -284,40 +284,24 @@ function Admin() {
       setSaving(true);
       setError("");
 
-      const payload = new FormData();
-
-      payload.append(
-        "heading",
-        aboutForm.heading.trim()
-      );
-
-      payload.append(
-        "bio1",
-        aboutForm.bio1.trim()
-      );
-
-      payload.append(
-        "bio2",
-        aboutForm.bio2.trim()
-      );
-
-      payload.append(
-        "cv_url",
-        aboutForm.cvUrl.trim()
-      );
-
-      if (aboutForm.socials.trim()) {
-        payload.append(
-          "socials",
-          aboutForm.socials.trim()
-        );
-      }
+      let payload;
 
       if (aboutForm.profilePicFile) {
-        payload.append(
-          "profile_pic",
-          aboutForm.profilePicFile
-        );
+        payload = new FormData();
+        payload.append("heading", aboutForm.heading.trim());
+        payload.append("bio1", aboutForm.bio1.trim());
+        payload.append("bio2", aboutForm.bio2.trim());
+        payload.append("cv_url", aboutForm.cvUrl.trim());
+        payload.append("socials", aboutForm.socials.trim() || "{}");
+        payload.append("profile_pic", aboutForm.profilePicFile);
+      } else {
+        payload = {
+          heading: aboutForm.heading.trim(),
+          bio1: aboutForm.bio1.trim(),
+          bio2: aboutForm.bio2.trim(),
+          cv_url: aboutForm.cvUrl.trim(),
+          socials: aboutForm.socials.trim() || "{}",
+        };
       }
 
       const updated = await updateAbout(payload);
