@@ -73,14 +73,16 @@ export function fetchAbout() {
   return request("/api/about");
 }
 
-export function updateAbout(formData) {
+export function updateAbout(payload) {
   const token = getAdminToken();
+  const isFormData = payload instanceof FormData;
   return request("/api/about", {
     method: "PUT",
-    headers: token
-      ? { Authorization: `Bearer ${token}` }
-      : {},
-    body: formData,
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(!isFormData ? { "Content-Type": "application/json" } : {}),
+    },
+    body: isFormData ? payload : JSON.stringify(payload),
   });
 }
 
