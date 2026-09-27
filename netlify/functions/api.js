@@ -16,10 +16,20 @@ if (!supabaseUrl || !supabaseKey) {
   console.error("Missing Supabase environment variables.");
 }
 
-const supabase = createClient(
-  supabaseUrl,
-  supabaseKey
-);
+const supabase =
+  supabaseUrl && supabaseKey
+    ? createClient(supabaseUrl, supabaseKey)
+    : null;
+
+function requireSupabase() {
+  if (!supabase) {
+    throw new Error(
+      "Supabase is not configured. Set SUPABASE_URL and SUPABASE_SECRET_KEY (or SUPABASE_SERVICE_ROLE_KEY) in Netlify environment variables."
+    );
+  }
+
+  return supabase;
+}
 
 const TOKEN_EXPIRY_SECONDS = 60 * 60 * 12;
 
@@ -406,7 +416,7 @@ async function uploadFile(
       .toString("hex")}-${safeFilename}`;
 
   const { error } =
-    await supabase.storage
+    await requireSupabase().storage
       .from(bucket)
       .upload(
         filePath,
@@ -431,7 +441,7 @@ async function uploadFile(
   }
 
   const { data } =
-    supabase.storage
+    requireSupabase().storage
       .from(bucket)
       .getPublicUrl(
         filePath
@@ -474,7 +484,7 @@ async function deleteStorageFile(
     }
 
     const { error } =
-      await supabase.storage
+      await requireSupabase().storage
         .from(bucket)
         .remove([filePath]);
 
@@ -635,7 +645,7 @@ export default async function handler(
       path === "/about"
     ) {
       const { data, error } =
-        await supabase
+        await requireSupabase()
           .from("about")
           .select("*")
           .order(
@@ -719,7 +729,7 @@ export default async function handler(
       }
 
       const { data: existing } =
-        await supabase
+        await requireSupabase()
           .from("about")
           .select("*")
           .order(
@@ -813,9 +823,8 @@ export default async function handler(
               null,
 
         cv_url:
-          fields.cv_url !==
-          undefined
-            ? fields.cv_url
+          (fields.cv_url !== undefined || fields.cvUrl !== undefined)
+            ? (fields.cv_url ?? fields.cvUrl)
             : existing?.cv_url ||
               null,
 
@@ -826,7 +835,7 @@ export default async function handler(
 
       if (existing?.id) {
         result =
-          await supabase
+          await requireSupabase()
             .from("about")
             .update(
               aboutData
@@ -839,7 +848,7 @@ export default async function handler(
             .single();
       } else {
         result =
-          await supabase
+          await requireSupabase()
             .from("about")
             .insert(
               aboutData
@@ -863,10 +872,7 @@ export default async function handler(
 
       return jsonResponse(
         200,
-        {
-          success: true,
-          data: result.data,
-        }
+        result.data
       );
     }
 
@@ -879,7 +885,7 @@ export default async function handler(
       path === "/projects"
     ) {
       const { data, error } =
-        await supabase
+        await requireSupabase()
           .from("projects")
           .select("*")
           .order(
@@ -957,10 +963,12 @@ export default async function handler(
 
       let imageUrl =
         fields.image_url ||
+        fields.imageUrl ||
         null;
 
       let fileUrl =
         fields.file_url ||
+        fields.fileUrl ||
         null;
 
       const imageFile =
@@ -1030,7 +1038,7 @@ export default async function handler(
       };
 
       const { data, error } =
-        await supabase
+        await requireSupabase()
           .from("projects")
           .insert(
             projectData
@@ -1053,10 +1061,7 @@ export default async function handler(
 
       return jsonResponse(
         201,
-        {
-          success: true,
-          data,
-        }
+        data
       );
     }
 
@@ -1087,7 +1092,7 @@ export default async function handler(
         data: existing,
         error:
           existingError,
-      } = await supabase
+      } = await requireSupabase()
         .from("projects")
         .select("*")
         .eq("id", id)
@@ -1272,7 +1277,7 @@ export default async function handler(
         fileUrl;
 
       const { data, error } =
-        await supabase
+        await requireSupabase()
           .from("projects")
           .update(
             updateData
@@ -1296,10 +1301,7 @@ export default async function handler(
 
       return jsonResponse(
         200,
-        {
-          success: true,
-          data,
-        }
+        data
       );
     }
 
@@ -1327,7 +1329,7 @@ export default async function handler(
 
       const {
         data: existing,
-      } = await supabase
+      } = await requireSupabase()
         .from("projects")
         .select("*")
         .eq("id", id)
@@ -1359,7 +1361,7 @@ export default async function handler(
       }
 
       const { error } =
-        await supabase
+        await requireSupabase()
           .from("projects")
           .delete()
           .eq("id", id);
@@ -1396,7 +1398,7 @@ export default async function handler(
       path === "/certificates"
     ) {
       const { data, error } =
-        await supabase
+        await requireSupabase()
           .from("certificates")
           .select("*")
           .order(
@@ -1474,10 +1476,12 @@ export default async function handler(
 
       let imageUrl =
         fields.image_url ||
+        fields.imageUrl ||
         null;
 
       let fileUrl =
         fields.file_url ||
+        fields.fileUrl ||
         null;
 
       const imageFile =
@@ -1557,6 +1561,7 @@ export default async function handler(
 
         verify_url:
           fields.verify_url ||
+          fields.verifyUrl ||
           null,
 
         image_url:
@@ -1567,7 +1572,7 @@ export default async function handler(
       };
 
       const { data, error } =
-        await supabase
+        await requireSupabase()
           .from("certificates")
           .insert(
             certificateData
@@ -1590,10 +1595,7 @@ export default async function handler(
 
       return jsonResponse(
         201,
-        {
-          success: true,
-          data,
-        }
+        data
       );
     }
 
@@ -1624,7 +1626,7 @@ export default async function handler(
         data: existing,
         error:
           existingError,
-      } = await supabase
+      } = await requireSupabase()
         .from("certificates")
         .select("*")
         .eq("id", id)
@@ -1851,7 +1853,7 @@ export default async function handler(
         fileUrl;
 
       const { data, error } =
-        await supabase
+        await requireSupabase()
           .from("certificates")
           .update(
             updateData
@@ -1875,10 +1877,7 @@ export default async function handler(
 
       return jsonResponse(
         200,
-        {
-          success: true,
-          data,
-        }
+        data
       );
     }
 
@@ -1906,7 +1905,7 @@ export default async function handler(
 
       const {
         data: existing,
-      } = await supabase
+      } = await requireSupabase()
         .from("certificates")
         .select("*")
         .eq("id", id)
@@ -1942,7 +1941,7 @@ export default async function handler(
       }
 
       const { error } =
-        await supabase
+        await requireSupabase()
           .from("certificates")
           .delete()
           .eq("id", id);
@@ -2104,7 +2103,7 @@ export default async function handler(
       }
 
       const { data, error } =
-        await supabase
+        await requireSupabase()
           .from(
             "contact_messages"
           )
