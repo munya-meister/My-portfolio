@@ -77,9 +77,9 @@ export function updateAbout(formData) {
   const token = getAdminToken();
   return request("/api/about", {
     method: "PUT",
-    headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
-    },
+    headers: token
+      ? { Authorization: `Bearer ${token}` }
+      : {},
     body: formData,
   });
 }
@@ -96,9 +96,9 @@ export function createCertificate(formData) {
   const token = getAdminToken();
   return request("/api/certificates", {
     method: "POST",
-    headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
-    },
+    headers: token
+      ? { Authorization: `Bearer ${token}` }
+      : {},
     body: formData,
   });
 }
@@ -107,9 +107,9 @@ export function updateCertificate(id, formData) {
   const token = getAdminToken();
   return request(`/api/certificates/${id}`, {
     method: "PUT",
-    headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
-    },
+    headers: token
+      ? { Authorization: `Bearer ${token}` }
+      : {},
     body: formData,
   });
 }
@@ -118,9 +118,9 @@ export function deleteCertificate(id) {
   const token = getAdminToken();
   return request(`/api/certificates/${id}`, {
     method: "DELETE",
-    headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
-    },
+    headers: token
+      ? { Authorization: `Bearer ${token}` }
+      : {},
   });
 }
 
@@ -128,9 +128,9 @@ export function createProject(formData) {
   const token = getAdminToken();
   return request("/api/projects", {
     method: "POST",
-    headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
-    },
+    headers: token
+      ? { Authorization: `Bearer ${token}` }
+      : {},
     body: formData,
   });
 }
@@ -139,9 +139,9 @@ export function updateProject(id, formData) {
   const token = getAdminToken();
   return request(`/api/projects/${id}`, {
     method: "PUT",
-    headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
-    },
+    headers: token
+      ? { Authorization: `Bearer ${token}` }
+      : {},
     body: formData,
   });
 }
@@ -150,8 +150,8 @@ export function deleteProject(id) {
   const token = getAdminToken();
   return request(`/api/projects/${id}`, {
     method: "DELETE",
-    headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
-    },
+    headers: token
+      ? { Authorization: `Bearer ${token}` }
+      : {},
   });
 }
