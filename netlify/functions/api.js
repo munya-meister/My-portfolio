@@ -440,14 +440,24 @@ async function uploadFile(
     );
   }
 
-  const { data } =
-    requireSupabase().storage
+  // Return a signed URL instead of assuming the bucket is public.
+  // This works even when Storage bucket visibility/policies change.
+  const { data: signedData, error: signedError } =
+    await requireSupabase().storage
       .from(bucket)
-      .getPublicUrl(
-        filePath
-      );
+      .createSignedUrl(filePath, 60 * 60 * 24 * 365);
 
-  return data.publicUrl;
+  if (signedError || !signedData?.signedUrl) {
+    console.error(
+      `Signed URL error (${bucket}):`,
+      signedError
+    );
+    throw new Error(
+      `Failed to create image URL: ${signedError?.message || "No signed URL returned"}`
+    );
+  }
+
+  return signedData.signedUrl;
 }
 
 async function deleteStorageFile(
