@@ -5,19 +5,7 @@ import { FaExternalLinkAlt, FaGithub, FaTimes } from "react-icons/fa";
 function ProjectModal({ project, onClose }) {
   if (!project) return null;
 
-  const imageSrc =
-    project.local_image ||
-    project.localImage ||
-    project.image_url ||
-    project.imageUrl ||
-    project.image ||
-    project.file_url ||
-    project.fileUrl;
-  const localImageSrc =
-    typeof imageSrc === "string" &&
-    (imageSrc.startsWith("/images/") || /^https:\/\//i.test(imageSrc))
-      ? imageSrc
-      : null;
+  const imageSrc = typeof project.image_url === "string" ? project.image_url : null;
 
   return (
     <AnimatePresence>
@@ -40,9 +28,9 @@ function ProjectModal({ project, onClose }) {
           </button>
 
           <div className="modal-header">
-            {localImageSrc && (
+            {imageSrc && (
               <div className="modal-image-wrapper">
-                <img src={localImageSrc} alt={project.title} className="modal-image" />
+                <img src={imageSrc} alt={project.title} className="modal-image" />
               </div>
             )}
             <div className="modal-title-section">
