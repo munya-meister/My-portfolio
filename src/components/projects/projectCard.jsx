@@ -2,13 +2,7 @@ import "./projects.css";
 import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
 
 function resolveImage(project) {
-  const src =
-    project.local_image ||
-    project.localImage ||
-    project.image_url ||
-    project.imageUrl ||
-    project.image ||
-    null;
+  const src = project.image_url || null;
 
   if (!src || typeof src !== "string") return null;
 
