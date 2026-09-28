@@ -569,16 +569,6 @@ function Admin() {
       );
 
       payload.append(
-        "image_url",
-        projectForm.image_url.trim()
-      );
-
-      payload.append(
-        "file_url",
-        projectForm.file_url.trim()
-      );
-
-      payload.append(
         "category",
         projectForm.category.trim()
       );
@@ -1415,44 +1405,6 @@ function Admin() {
                   </div>
 
                   <div className="admin-field">
-                    <label htmlFor="project-image-url">
-                      Image URL
-                    </label>
-
-                    <input
-                      id="project-image-url"
-                      className="admin-input"
-                      name="image_url"
-                      value={
-                        projectForm.image_url
-                      }
-                      onChange={
-                        handleProjectChange
-                      }
-                      placeholder="https://..."
-                    />
-                  </div>
-
-                  <div className="admin-field">
-                    <label htmlFor="project-file-url">
-                      File URL
-                    </label>
-
-                    <input
-                      id="project-file-url"
-                      className="admin-input"
-                      name="file_url"
-                      value={
-                        projectForm.file_url
-                      }
-                      onChange={
-                        handleProjectChange
-                      }
-                      placeholder="https://..."
-                    />
-                  </div>
-
-                  <div className="admin-field">
                     <label htmlFor="project-image">
                       Project Image
                     </label>
@@ -1461,12 +1413,16 @@ function Admin() {
                       id="project-image"
                       className="admin-input"
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg,image/png,image/webp,image/gif"
                       name="image"
-                      onChange={
-                        handleProjectChange
-                      }
+                      onChange={handleProjectChange}
+                      required={!editingProjectId}
                     />
+                    <small>
+                      {editingProjectId
+                        ? "Choose a new image only if you want to replace the current one."
+                        : "Choose the project image that should appear on the portfolio."}
+                    </small>
                   </div>
 
                   <div className="admin-field">

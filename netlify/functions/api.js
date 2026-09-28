@@ -961,10 +961,7 @@ export default async function handler(
           );
       }
 
-      let imageUrl =
-        fields.image_url ||
-        fields.imageUrl ||
-        null;
+      let imageUrl = null;
 
       let fileUrl =
         fields.file_url ||
@@ -992,11 +989,30 @@ export default async function handler(
         );
 
       if (imageFile) {
+        if (!imageFile.mimeType?.startsWith("image/")) {
+          return jsonResponse(400, {
+            success: false,
+            message: "Project image must be a valid image file.",
+          });
+        }
+
         imageUrl =
           await uploadFile(
             imageFile,
             "projects"
           );
+
+        if (!imageUrl) {
+          return jsonResponse(500, {
+            success: false,
+            message: "Project image upload did not return a public URL.",
+          });
+        }
+      } else {
+        return jsonResponse(400, {
+          success: false,
+          message: "A project image is required.",
+        });
       }
 
       if (documentFile) {
@@ -1153,10 +1169,7 @@ export default async function handler(
       }
 
       let imageUrl =
-        fields.image_url !==
-        undefined
-          ? fields.image_url
-          : existing.image_url;
+        existing.image_url || null;
 
       let fileUrl =
         fields.file_url !==
@@ -1185,11 +1198,25 @@ export default async function handler(
         );
 
       if (imageFile) {
+        if (!imageFile.mimeType?.startsWith("image/")) {
+          return jsonResponse(400, {
+            success: false,
+            message: "Project image must be a valid image file.",
+          });
+        }
+
         imageUrl =
           await uploadFile(
             imageFile,
             "projects"
           );
+
+        if (!imageUrl) {
+          return jsonResponse(500, {
+            success: false,
+            message: "Project image upload did not return a public URL.",
+          });
+        }
 
         if (
           existing.image_url
