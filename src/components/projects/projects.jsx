@@ -1,12 +1,12 @@
 import "./projects.css";
 import { useEffect, useState } from "react";
-import initialProjects from "./ProjectsData";
 import ProjectCard from "./projectCard";
 import ProjectModal from "./ProjectModal";
 import { fetchProjects } from "../../api";
 
 function Projects() {
-  const [projects, setProjects] = useState(initialProjects);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("All");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState(null);
@@ -17,8 +17,7 @@ function Projects() {
     fetchProjects()
       .then((data) => {
         if (!active || !Array.isArray(data)) return;
-        if (data.length > 0) {
-          setProjects(
+        setProjects(
             data.map((item) => ({
               ...item,
               id: item.id || item._id,
@@ -38,10 +37,15 @@ function Projects() {
                   : [],
             })),
           );
-        }
       })
       .catch(() => {
-        setError("Unable to load backend projects. Showing local projects.");
+        if (active) {
+          setProjects([]);
+          setError("Unable to load projects right now.");
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
     return () => {
       active = false;
@@ -110,8 +114,9 @@ function Projects() {
         </div>
 
         {error && <p className="error-message">{error}</p>}
+        {loading && <p className="projects-loading">Loading projects...</p>}
 
-        <div className="carousel-container">
+        {!loading && projects.length > 0 && <div className="carousel-container">
           <button
             className="carousel-nav prev"
             onClick={prevSlide}
@@ -139,9 +144,9 @@ function Projects() {
           >
             →
           </button>
-        </div>
+        </div>}
 
-        <div className="carousel-indicators">
+        {!loading && projects.length > 0 && <div className="carousel-indicators">
           {filteredProjects.map((_, index) => (
             <button
               key={index}
@@ -150,7 +155,7 @@ function Projects() {
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
-        </div>
+        </div>}
       </div>
 
       {selectedProject && (
