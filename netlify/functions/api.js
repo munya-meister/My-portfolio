@@ -414,25 +414,19 @@ async function uploadFile(file, bucket) {
   return filePath;
 }
 
-async function createStorageUrl(bucket, filePath) {
+function createStorageUrl(bucket, storedValue) {
+  if (!storedValue) return null;
+
+  const filePath = storagePathFromValue(bucket, storedValue);
   if (!filePath) return null;
 
-  // New records store only the object path. Generate a fresh URL when reading.
-  if (!/^https?:\/\//i.test(filePath)) {
-    const { data, error } = await requireSupabase().storage
-      .from(bucket)
-      .createSignedUrl(filePath, 60 * 60);
+  // These buckets are public. Build the browser URL from the stored object path
+  // instead of persisting or regenerating signed URLs.
+  const { data } = requireSupabase().storage
+    .from(bucket)
+    .getPublicUrl(filePath);
 
-    if (error || !data?.signedUrl) {
-      console.error(`Storage URL error (${bucket}):`, error);
-      return null;
-    }
-    return data.signedUrl;
-  }
-
-  // Legacy records may contain an old public/signed URL. Keep returning it
-  // until that project is replaced through Admin.
-  return filePath;
+  return data?.publicUrl || null;
 }
 
 function storagePathFromValue(bucket, value) {
@@ -868,7 +862,7 @@ export default async function handler(
       const projectsWithImages = await Promise.all(
         (data || []).map(async (project) => ({
           ...project,
-          image_url: await createStorageUrl("projects", project.image_url),
+          image_url: createStorageUrl("projects", project.image_url),
         }))
       );
 
