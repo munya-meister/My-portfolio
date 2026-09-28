@@ -22,7 +22,11 @@ function Projects() {
             data.map((item) => ({
               ...item,
               id: item.id || item._id,
-              image: item.imageUrl || item.fileUrl || item.image || "",
+              image:
+                item.image_url ||
+                item.imageUrl ||
+                item.image ||
+                null,
               category: item.category || "Web Development",
               technologies: Array.isArray(item.technologies)
                 ? item.technologies

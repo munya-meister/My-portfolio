@@ -2,10 +2,22 @@ import "./projects.css";
 import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
 
 function resolveImage(project) {
-  const src = project.local_image || project.localImage || project.image_url || project.imageUrl || project.image || project.file_url || project.fileUrl;
-  if (!src) return null;
-  // Only deployable project-local assets are accepted for portfolio imagery.
-  return src.startsWith("/images/") ? src : null;
+  const src =
+    project.local_image ||
+    project.localImage ||
+    project.image_url ||
+    project.imageUrl ||
+    project.image ||
+    null;
+
+  if (!src || typeof src !== "string") return null;
+
+  // Local repository assets and backend-managed HTTPS images are both valid.
+  if (src.startsWith("/images/") || /^https:\/\//i.test(src)) {
+    return src;
+  }
+
+  return null;
 }
 
 function ProjectCard({ project, onViewProject }) {

@@ -13,7 +13,11 @@ function ProjectModal({ project, onClose }) {
     project.image ||
     project.file_url ||
     project.fileUrl;
-  const localImageSrc = imageSrc?.startsWith("/images/") ? imageSrc : null;
+  const localImageSrc =
+    typeof imageSrc === "string" &&
+    (imageSrc.startsWith("/images/") || /^https:\/\//i.test(imageSrc))
+      ? imageSrc
+      : null;
 
   return (
     <AnimatePresence>
