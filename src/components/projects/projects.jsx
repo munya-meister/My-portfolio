@@ -21,11 +21,7 @@ function Projects() {
             data.map((item) => ({
               ...item,
               id: item.id || item._id,
-              image:
-                item.image_url ||
-                item.imageUrl ||
-                item.image ||
-                null,
+              image_url: item.image_url || null,
               category: item.category || "Web Development",
               technologies: Array.isArray(item.technologies)
                 ? item.technologies
