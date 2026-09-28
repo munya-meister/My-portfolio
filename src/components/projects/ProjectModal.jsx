@@ -40,13 +40,11 @@ function ProjectModal({ project, onClose }) {
           </button>
 
           <div className="modal-header">
-            <div className="modal-image-wrapper">
-              {localImageSrc ? (
+            {localImageSrc && (
+              <div className="modal-image-wrapper">
                 <img src={localImageSrc} alt={project.title} className="modal-image" />
-              ) : (
-                <div className="modal-image modal-image-placeholder" aria-hidden="true" />
-              )}
-            </div>
+              </div>
+            )}
             <div className="modal-title-section">
               <span className="modal-category">{project.category}</span>
               <h2 className="modal-title">{project.title}</h2>
