@@ -27,13 +27,11 @@ function ProjectCard({ project, onViewProject }) {
   return (
     <div className="project-card">
 
-      <div className="project-image-wrapper">
-        {imageSrc ? (
+      {imageSrc && (
+        <div className="project-image-wrapper">
           <img src={imageSrc} alt={project.title} className="project-image" />
-        ) : (
-          <div className="project-image project-image-placeholder" aria-hidden="true" />
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="project-content">
 
