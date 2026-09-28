@@ -393,123 +393,70 @@ function sanitizeFilename(
     );
 }
 
-async function uploadFile(
-  file,
-  bucket
-) {
-  if (
-    !file ||
-    !file.buffer ||
-    !file.buffer.length
-  ) {
-    return null;
-  }
+async function uploadFile(file, bucket) {
+  if (!file?.buffer?.length) return null;
 
-  const safeFilename =
-    sanitizeFilename(
-      file.filename
-    );
+  const safeFilename = sanitizeFilename(file.filename || "upload");
+  const filePath = `${Date.now()}-${crypto.randomBytes(8).toString("hex")}-${safeFilename}`;
 
-  const filePath =
-    `${Date.now()}-${crypto
-      .randomBytes(8)
-      .toString("hex")}-${safeFilename}`;
-
-  const { error } =
-    await requireSupabase().storage
-      .from(bucket)
-      .upload(
-        filePath,
-        file.buffer,
-        {
-          contentType:
-            file.mimeType ||
-            "application/octet-stream",
-          upsert: true,
-        }
-      );
+  const { error } = await requireSupabase().storage
+    .from(bucket)
+    .upload(filePath, file.buffer, {
+      contentType: file.mimeType || "application/octet-stream",
+      upsert: false,
+    });
 
   if (error) {
-    console.error(
-      `Upload error (${bucket}):`,
-      error
-    );
-
-    throw new Error(
-      `Failed to upload file: ${error.message}`
-    );
+    console.error(`Upload error (${bucket}):`, error);
+    throw new Error(`Failed to upload file: ${error.message}`);
   }
 
-  // Return a signed URL instead of assuming the bucket is public.
-  // This works even when Storage bucket visibility/policies change.
-  const { data: signedData, error: signedError } =
-    await requireSupabase().storage
-      .from(bucket)
-      .createSignedUrl(filePath, 60 * 60 * 24 * 365);
-
-  if (signedError || !signedData?.signedUrl) {
-    console.error(
-      `Signed URL error (${bucket}):`,
-      signedError
-    );
-    throw new Error(
-      `Failed to create image URL: ${signedError?.message || "No signed URL returned"}`
-    );
-  }
-
-  return signedData.signedUrl;
+  return filePath;
 }
 
-async function deleteStorageFile(
-  bucket,
-  publicUrl
-) {
-  if (!publicUrl) {
-    return;
+async function createStorageUrl(bucket, filePath) {
+  if (!filePath) return null;
+
+  // New records store only the object path. Generate a fresh URL when reading.
+  if (!/^https?:\/\//i.test(filePath)) {
+    const { data, error } = await requireSupabase().storage
+      .from(bucket)
+      .createSignedUrl(filePath, 60 * 60);
+
+    if (error || !data?.signedUrl) {
+      console.error(`Storage URL error (${bucket}):`, error);
+      return null;
+    }
+    return data.signedUrl;
   }
+
+  // Legacy records may contain an old public/signed URL. Keep returning it
+  // until that project is replaced through Admin.
+  return filePath;
+}
+
+function storagePathFromValue(bucket, value) {
+  if (!value) return null;
+  if (!/^https?:\/\//i.test(value)) return value;
 
   try {
-    const marker =
-      `/storage/v1/object/public/${bucket}/`;
-
-    const index =
-      publicUrl.indexOf(
-        marker
-      );
-
-    if (index === -1) {
-      return;
-    }
-
-    const filePath =
-      decodeURIComponent(
-        publicUrl.substring(
-          index +
-            marker.length
-        )
-      );
-
-    if (!filePath) {
-      return;
-    }
-
-    const { error } =
-      await requireSupabase().storage
-        .from(bucket)
-        .remove([filePath]);
-
-    if (error) {
-      console.error(
-        "Storage deletion error:",
-        error
-      );
-    }
-  } catch (error) {
-    console.error(
-      "Storage deletion error:",
-      error
-    );
+    const url = new URL(value);
+    const publicMarker = `/storage/v1/object/public/${bucket}/`;
+    const signMarker = `/storage/v1/object/sign/${bucket}/`;
+    const marker = url.pathname.includes(publicMarker) ? publicMarker : signMarker;
+    const index = url.pathname.indexOf(marker);
+    if (index === -1) return null;
+    return decodeURIComponent(url.pathname.slice(index + marker.length));
+  } catch {
+    return null;
   }
+}
+
+async function deleteStorageFile(bucket, storedValue) {
+  const filePath = storagePathFromValue(bucket, storedValue);
+  if (!filePath) return;
+  const { error } = await requireSupabase().storage.from(bucket).remove([filePath]);
+  if (error) console.error("Storage deletion error:", error);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -918,9 +865,16 @@ export default async function handler(
         );
       }
 
+      const projectsWithImages = await Promise.all(
+        (data || []).map(async (project) => ({
+          ...project,
+          image_url: await createStorageUrl("projects", project.image_url),
+        }))
+      );
+
       return jsonResponse(
         200,
-        data || []
+        projectsWithImages
       );
     }
 
