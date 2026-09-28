@@ -2,7 +2,7 @@ const projects = [
   {
     id: 1,
     title: "Personal Portfolio Website",
-    image: "/images/project-1.jpg",
+    image: null,
     shortDescription: "Modern responsive portfolio showcasing digital marketing, web development and creative design work.",
     category: "Web Development",
     role: "Full Stack Developer & Designer",
@@ -20,7 +20,7 @@ const projects = [
   {
     id: 2,
     title: "PawPure Nutrition",
-    image: "/images/project-2.jpg",
+    image: null,
     shortDescription: "Brand identity, social media content and website design for a pet nutrition company.",
     category: "Creative Design",
     role: "Brand Designer & Digital Marketer",
@@ -38,7 +38,7 @@ const projects = [
   {
     id: 3,
     title: "Nyaradzo Campaign",
-    image: "/images/project-3.jpg",
+    image: null,
     shortDescription: "Educational digital marketing campaign focused on financial literacy and insurance awareness.",
     category: "Digital Marketing",
     role: "Digital Marketing Strategist",
@@ -56,7 +56,7 @@ const projects = [
   {
     id: 4,
     title: "Grandmeister Music",
-    image: "/images/project-4.jpg",
+    image: null,
     shortDescription: "Music brand identity and digital promotion for an emerging music artist.",
     category: "Creative Design",
     role: "Brand Designer & Digital Promoter",
