@@ -44,8 +44,6 @@ const emptyProjectForm = {
   technologies: "",
   demo: "",
   github: "",
-  image_url: "",
-  file_url: "",
   category: "Web Development",
   image: null,
   file: null,
@@ -511,8 +509,6 @@ function Admin() {
         : project?.technologies || "",
       demo: project?.demo || "",
       github: project?.github || "",
-      image_url: project?.image_url || "",
-      file_url: project?.file_url || "",
       category:
         project?.category || "Web Development",
       image: null,
