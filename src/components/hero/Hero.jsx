@@ -1,12 +1,13 @@
 import "./Hero.css";
 import { useEffect, useState } from "react";
 import { fetchAbout } from "../../api";
-import { downloadPublicFile } from "../../utils/downloadFile";
+
+const CV_FILE = "/Munyaradzi%20CV.pdf";
 
 const defaultAbout = {
   profilePic: "",
   availability: "",
-  cvUrl: "/Munyaradzi CV.pdf",
+  cvUrl: CV_FILE,
 };
 
 const columnItems = [
@@ -26,7 +27,6 @@ const columnItems = [
 
 function Hero() {
   const [about, setAbout] = useState(defaultAbout);
-  const [downloadMessage, setDownloadMessage] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -42,27 +42,12 @@ function Hero() {
     };
   }, []);
 
-  const handleDownloadCv = async () => {
-    setDownloadMessage("");
-    const success = await downloadPublicFile(
-      about.cvUrl || "/Munyaradzi CV.pdf",
-      "Munyaradzi_Mbewe_CV.pdf",
-    );
-    if (success) {
-      setDownloadMessage("Download started.");
-    } else {
-      setDownloadMessage(
-        "The CV could not be downloaded right now. Please try again shortly.",
-      );
-    }
-  };
-
   return (
     <section id="home" className="hero">
       <div className="hero-background"></div>
       <div className="hero-overlay"></div>
       <div className="hero-red-overlay"></div>
-      
+
       <div className="hero-container">
         <div className="hero-grid">
           <div className="hero-main">
@@ -85,10 +70,9 @@ function Hero() {
 
             <div className="hero-cta-row">
               <a
-                href={about.cvUrl ?? "#"}
-                download
+                href={CV_FILE}
+                download="Munyaradzi_Mbewe_CV.pdf"
                 className="primary-btn"
-                onClick={handleDownloadCv}
               >
                 DOWNLOAD CV
               </a>
@@ -97,12 +81,6 @@ function Hero() {
                 {about.availability ?? "Available for new opportunities"}
               </span>
             </div>
-
-            {downloadMessage && (
-              <p className="download-feedback" role="status" aria-live="polite">
-                {downloadMessage}
-              </p>
-            )}
           </div>
 
           <aside className="hero-sidebar">
