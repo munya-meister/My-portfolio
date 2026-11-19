@@ -1,20 +1,19 @@
 import "./about.css";
 import { useEffect, useState } from "react";
 import { fetchAbout } from "../../api";
-import { downloadPublicFile } from "../../utils/downloadFile";
+
+const CV_FILE = "/Munyaradzi_Mbewe_CV.pdf";
 
 const defaultAbout = {
   profilePic: "",
   heading: "EXPERT IN BUILDING BRANDS, WEBSITES & CREATIVE EXPERIENCES.",
   bio1: "I'm a digital professional who combines strategic marketing, technical development, and creative design to build comprehensive digital solutions.",
   bio2: "My approach integrates data-driven marketing strategies with modern web technologies and thoughtful design thinking to create experiences that connect with audiences and drive results.",
-  cvUrl: "/Munyaradzi CV.pdf",
   availability: "Available for new opportunities",
 };
 
 function About() {
   const [about, setAbout] = useState(defaultAbout);
-  const [downloadMessage, setDownloadMessage] = useState("");
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
@@ -31,23 +30,7 @@ function About() {
     };
   }, []);
 
-  // Profile artwork is a deployable local asset in public/images.
   const profileSrc = "/images/portrait.jpeg";
-
-  const handleDownloadCv = async () => {
-    setDownloadMessage("");
-    const success = await downloadPublicFile(
-      about.cvUrl || "/Munyaradzi CV.pdf",
-      "Munyaradzi_Mbewe_CV.pdf",
-    );
-    if (success) {
-      setDownloadMessage("Download started.");
-    } else {
-      setDownloadMessage(
-        "The CV could not be downloaded right now. Please try again shortly.",
-      );
-    }
-  };
 
   const handleImageError = () => {
     setImageError(true);
@@ -57,7 +40,7 @@ function About() {
     <section className="about" id="about">
       <div className="about-background"></div>
       <div className="about-overlay"></div>
-      
+
       <div className="about-container">
         <div className="about-grid">
           <div className="about-portrait">
@@ -65,7 +48,7 @@ function About() {
               <div className="portrait-card">
                 <img
                   src={profileSrc}
-                  alt={about.heading ? `Portrait of ${about.heading}` : "Portrait"}
+                  alt="Portrait of Munyaradzi Mbewe"
                   loading="lazy"
                   className="portrait-image"
                   onError={handleImageError}
@@ -81,33 +64,25 @@ function About() {
           </div>
 
           <div className="about-content">
-              <p className="eyebrow">ABOUT ME</p>
+            <p className="eyebrow">ABOUT ME</p>
 
-               <h2 className="about-heading">
-               {about.heading || "Building brands, websites & creative experiences."}
-               </h2>
-
+            <h2 className="about-heading">
+              {about.heading || "Building brands, websites & creative experiences."}
+            </h2>
 
             <div className="bio-paragraphs">
-              {about.bio1 && (
-                <p className="bio-text">{about.bio1}</p>
-              )}
-              {about.bio2 && (
-                <p className="bio-text">{about.bio2}</p>
-              )}
+              {about.bio1 && <p className="bio-text">{about.bio1}</p>}
+              {about.bio2 && <p className="bio-text">{about.bio2}</p>}
             </div>
 
             <div className="about-actions">
-              {about.cvUrl && (
-                <a
-                  href={about.cvUrl}
-                  download
-                  className="btn-primary"
-                  onClick={handleDownloadCv}
-                >
-                  Download CV
-                </a>
-              )}
+              <a
+                href={CV_FILE}
+                download="Munyaradzi_Mbewe_CV.pdf"
+                className="btn-primary"
+              >
+                Download CV
+              </a>
 
               {about.availability && (
                 <span className="availability-text">
@@ -115,12 +90,6 @@ function About() {
                 </span>
               )}
             </div>
-
-            {downloadMessage && (
-              <p className="download-feedback" role="status" aria-live="polite">
-                {downloadMessage}
-              </p>
-            )}
           </div>
         </div>
       </div>
